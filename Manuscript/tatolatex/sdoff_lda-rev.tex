@@ -24,7 +24,7 @@
 
 \articletype{}% NOT REQUIRED IN A RESEARCH ARTICLE
 
-\title{\textit{Global fall mean sea level pressure in predicting modes of remotely sensed continuous snow coverage over British Columbia, Canada}}
+\title{\textit{Classification of clustered snow off dates over British Columbia, Canada, from mean sea level pressure}}
 
 \author{
 \name{H. E. Gleason$^{1}$, A. R. Bevington$^{1,}$$^{2}$$^{\ast}$\thanks{$^\ast$Corresponding author's email: alexandre.bevington@gov.bc.ca} and V. N. Foord$^{1}$}
@@ -36,7 +36,7 @@
 \maketitle
 
 \begin{abstract}
-Atmosphere-ocean teleconnections influence snow cover timing in western Canada and impact our seasonal predictions snowmelt and spring flooding. Non-standard, or non-indexed, indices also play an important role with regards to snow cover timing. these, however, are less intuitive for seasonal forecasting as they are not explained by a single timeseries index. This research paper investigates patterns in global sea level pressure as a predictor of snow cover timing in British Columbia, Canada. The pattern recognition includes both standard and non-standard atmosphere-ocean teleconnection. We use the last day of continuous snow cover (\sdoff{}) detected from timeseries satellite imagery acquired by the Moderate Resolution Imaging Spectroradiometer (MODIS) for the hydrological years 2000-2018. \sdoff{} has been shown to be related to snow water equivalent, and is also of interest to seasonal forecasters. Global mean sea level pressure (MSLP) from the NCEP-DOE Atmospheric Model Inter-Comparison Project (AMIP-II) Reanalysis 2 data product was used for the hydrological years 1978-2018. Both datasets were reduced with S-mode principal components analysis (PCA) and the \sdoff{} PCAs were run through a k-means clustering algorithm. Using descriptive linear disciminant analysis (LDA) we determine the contribution of each of the leading fall MSLP principle components to the discrimination of the \sdoff{} clusters. This method accurately predicts \sdoff{} clusters over BC from MSLP. This research demonstrates that although standard atmosphere-ocean teleconnections play an important role in \sdoff{} variability, methods that integrate both standard and non-standard indices may improve our understanding and predictions of \sdoff{} in British Columbia.
+Atmosphere-ocean teleconnections influence the accumulation and melt of snow in western Canada and can be useful in seasonal forecasting of snowmelt and runoff. Inter-annual variation in these atmosphere-ocean modes has been shown to influence the accumulation and melt of snow within British Columbia (BC), Canada. We investigate fall mean sea level pressure (MSLP) globally as a predictor of remotely sensed snowmelt dates within BC. We use the last day of continuous snow cover (\sdoff{}) detected from timeseries satellite imagery acquired by the Moderate Resolution Imaging Spectroradiometer (MODIS) for the hydrological years 2000--2018. \sdoff{} has been shown to be correlated with continuous snow duration, and is also of interest to seasonal forecasters. Global MSLP from the European Centre for Medium-Range Weather Forecasts ERA5 reanalysis was obtained over hydrological years 1979--2018. Both datasets were reduced using S-mode (time vs. location) principal components analysis. The \sdoff{} principle component scores were clustered using a \textit{k}-means clustering. Using an evolutionary feature selection approach, the subset of MSLP principle components that provided the best linear discrimination of the \sdoff{} clusters were selected. We explore the atmospheric MSLP principle components that influence the timing of snowmelt over BC, and use them to predict the \sdoff{} clusters at a seasonal lead time. 
 \end{abstract}
 
 \begin{keywords}
@@ -45,333 +45,283 @@ British Columbia, Canada, MODIS, Snow cover timing, Reanalysis, Sea level pressu
 
 
 \section{Introduction}
-In western Canada spatial and annual variation in winter precipitation patterns are highly dependent on synoptic-scale circulation patterns that influence the formation and trajectory of winter storms off the North Pacific Ocean. Global scale atmosphere-ocean modes, or teleconnection, have been shown to influence the frequency of these different synoptic-scale circulation types over BC and western Canada \citep{Stahl2006-og}.
+In western Canada spatial and annual variation in winter precipitation patterns are highly dependent on synoptic-scale circulation patterns that influence the formation and trajectory of winter storms off the North Pacific Ocean. Global scale atmosphere-ocean modes, or teleconnections, have been shown to influence the frequency of these different synoptic-scale circulation types over BC and western Canada \citep{Stahl2006-og}.
 \par
 The primary atmosphere-ocean interactions that have been shown to influence winter precipitation in western Canada are the El Niño Southern Oscillation (ENSO), Pacific Decadal Oscillation (PDO), Pacific North American Pattern (PNA) and Arctic Oscillation (AO). Prior studies have related variation in these climate modes to variation in climate over BC, including temperature and precipitation \citep[e.g.,][]{Shabbar1996-oc, Mantua1997-ri} and the timing and duration of snow cover \citep[e.g.,][]{Moore1996-xr,Bevington2019}. 
 \par
-The Moderate Resolution Imaging Spectroradiometer (MODIS) satellite sensor images the world four times daily, twice during the day and twice at night. Using MODIS derived snow cover \cite{Bevington2019} derived the start (\sdon{}) and end (\sdoff{}) dates of continuous snow coverage over BC and related these metrics to both the ENSO and PDO. Results from that study revealed strong correlations with both ENSO and the PDO, particularly with the \sdoff{} and duration (\sddur{}), and found that the strength of the correlations varied regionally throughout BC, and are influenced by elevation. As the timing and duration of snow cover has important economic, social and ecological implications for BC, the ability to predict these fields at a seasonal lead time would be a great benefit.
+The Moderate Resolution Imaging Spectroradiometer (MODIS) satellite sensor images the world four times daily as a result of the ascending and descending overpasses from MODIS Terra and MODIS Aqua platforms. Using MODIS derived snow cover \cite{Bevington2019} derived the start (\sdon{}) and end (\sdoff{}) dates of continuous snow coverage over BC and related these metrics to both the ENSO and PDO. Results from that study revealed strong correlations with both ENSO and the PDO, particularly with the \sdoff{} and duration (\sddur{}), and found that the strength of the correlations varied regionally throughout BC, and are influenced by elevation. As the timing and duration of snow cover has important economic, social and ecological implications for BC, the ability to predict these fields at a seasonal lead time would be a great benefit.
 \par
-Despite strong links between these atmosphere-ocean modes and snow cover, some variation in snow cover over BC is likely to be described by non-standard indices, as has been shown for streamflow response in Colorado \citep{Regonda2006}. Global mean sea level pressure (MSLP) datasets derived from reanalysis methods present the opportunity to determine the influence of teleconnections and non-standard (or non-indexed) atmosphere-ocean modes on snow cover in BC. Many studies have shown that low-frequency variability in global MSLP demonstrates gradually evolving modes closely linked to the ENSO phenomenon, and this slow evolution of the atmosphere provides the opportunity for long range predictive skill exploited by many statistical models based on these atmospheric quantities \citep{Latif1998}.
+Despite strong links between these atmosphere-ocean modes and snow cover, some variation in snow cover over BC is likely to be described by variation in the atmosphere not captured by teleconnection indices alone, such as has been shown for streamflow response in Colorado \citep{Regonda2006}. Global mean sea level pressure (MSLP) reanalysis datasets provide the opportunity to determine what global atmospheric patterns are influencing snow cover in BC. Many studies have shown that low-frequency variability in global MSLP demonstrates gradually evolving modes closely linked to the ENSO phenomenon, and this slow evolution of the atmosphere provides the opportunity for long range predictive skill exploited by many statistical models based on these atmospheric quantities \citep{Latif1998}. 
 \par
-The objective of this study was to test the suitability of global MSLP patterns aggregated during fall to better understand and predict variation in \sdoff{} patterns from year to year throughout BC. 
+The objective of this study was to test the suitability of global MSLP averaged during the fall season to better understand and predict spatial patterns and variation in \sdoff{} annually within BC. 
 
 
-\section{Study Area}
-Our study area (Fig.~\ref{study-area}) is focused on BC with small inclusions of southeastern Alaska and a roughly 100 km buffer into neighboring jurisdictions. This is the maximum extent of the \cite{Bevington2019} data. The purpose of using this extended region is that many important watersheds within BC extend just beyond provincial borders. In order to describe the spatial variation in the loading fields in a consistent way, BC Eco-Provinces are referenced in the subsequent sections, and are labeled in Fig. \ref{study-area}.
+\section{Study Area and Data}
+
+\subsection{Study Area}
+Our study area shown in Fig.~\ref{study-area} includes BC with small inclusions of southeastern Alaska and a ~100 km buffer into neighbouring jurisdictions. This is the maximum extent of the \cite{Bevington2019} data. The purpose of using this extended region is that many important watersheds within BC extend just beyond provincial borders. In order to describe the spatial variation in \sdoff{} with consistency, BC Eco-Provinces are referenced in the subsequent sections, and are labelled in Fig. \ref{study-area} \citep{BCEcoProv}.
 
 \begin{figure}
 	\begin{center}
 		\includegraphics[width=\linewidth]{Figures/study_area}
-		\caption{The study area (white dashed line), which extends just beyond the border of British Columbia, and includes the pan-handel of Alaska. The British Columbia Eco-Province regions are labeled.}
+		\caption{The study area (white dashed line), which extends just beyond the border of British Columbia, and includes the pan-handel of Alaska. The British Columbia Eco-Province regions are labelled.}
 		\label{study-area}
 	\end{center}
 \end{figure}
 
-\section{Data}
 \subsection{MODIS Snow Cover}
-MODIS is a multispectral optical imaging sensor aboard both the Aqua and Terra satellites and provides important observations of land, atmospheric and oceanic processes globally. With 36 spectral bands varying in resolution from 250-1000 m and a combined daily repeat interval MODIS is well equipped for monitoring changes over time across broad geographic areas. A number of derivative products are available from MODIS, including the daily snow cover data sets from Terra (MOD10A1) and Aqua (MYD10A1) which determine the Normalized Difference Snow Index (NDSI) \citep{Hall2011} from MODIS Level 1B calibrated radiance. In \cite{Bevington2019}, these data were used to determine the \sdon{}, \sdoff{} and \sddur{} of continuous snow cover over the study area, and to quantify their response to the ONI and PDO regionally. The code and gridded output of this work is available online at (\textit{https://github.com/bcgov/ts-rs-modis-snow}), and the years 2000, 2001 and 2018 were additionally processed for this study. In this analysis we only use annual \sdoff{} dates, which are in units of days-since-1-September (DSS). The \sdoff{} date is highly correlated with both \sdon{} and \sddur{}, which is why we chose \sdoff{} for this anlysis \citep{Bevington2019}.
+MODIS is a multispectral optical imaging sensor aboard both the Aqua and Terra satellites and provides important observations of land, atmospheric and oceanic processes globally. With 36 spectral bands varying in resolution from 250-1000 m and a combined daily repeat interval MODIS is well equipped for monitoring changes over time (since late 1999) across broad geographic areas. A number of derivative products are available from MODIS Collection 6 (C6), including the daily snow cover data sets from Terra (MOD10A1, \textit{https://nsidc.org/data/mod10a1}) and Aqua (MYD10A1, \textit{https://nsidc.org/data/myd10a1}) which are based on the normalized difference snow index (NDSI) derived from MODIS Level 1B calibrated radiance \citep{Riggs2016}. In \cite{Bevington2019}, these data were used to determine the \sdon{}, \sdoff{} and \sddur{} of continuous snow cover over the study area, and to quantify their response to the ENSO and PDO regionally. The code and gridded output of this work is available online at (\textit{https://github.com/bcgov/ts-rs-modis-snow}), and the years 2000, 2001 and 2018 were additionally processed for this study. In this analysis we only use annual \sdoff{} dates, which are in units of days-since-1-September (DSS). We decided to apply \sdoff{} in this study because over BC the \sdoff{} date is thought to be a good indicator of runoff and penology \citep{Bevington2019}.
 
-\subsection{NCEP-DOE Reanalysis 2}
-The National Center for Environmental Prediction (NCEP) Reanalysis 1 represents a data assimilation system that was first implemented to create a 40-year record of atmospheric fields to support research and climate monitoring at a global scale \citep{Kalnay1996}. Because of the complexity of the data assimilation and curation process, the Reanalysis 1 dataset is known to contain some errors, mostly for specific fields \citep{Kanamitsu2002}. The Department of Energy (DOE) NCEP-DOE Atmospheric Model Inter-Comparison Project (AMIP-II) Reanalysis (R-2) represents an updated version of the Reanalysis 1 products with many of the human errors amended. Both of these products have a number of different outputs, and formats available as an end product. In this study MSLP averaged monthly from R-2 was used for predicting the different MODIS derived \sdoff{} clusters. For each hydrologic year (1 Sep--1 Sep), the mean fall (Sep--Nov) MSLP was computed for each pixel globally from 2000--2018. 
+\subsection{European Centre for Medium-Range Weather Forecasts ERA5}
+The European Centre for Medium-Range Weather Forecasts (ECMWF) ERA5 atmospheric reanalysis is a global data product with a 31 km resolution and 137 atmosphere levels from the earths surface up to a height of 80 km. For the ERA5 mean sea level surface pressure (MSLP) field, data are assimilated from a combination of land, ship and buoyed based pressure observations operated by the World Meteorological Organization-Information System (WIS). The ERA5 reanalysis data is available hourly, or monthly. For this study we use the monthly MSLP product for predicting \sdoff{} (\textit{https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5}). The assimilation and physical processing for the ERA5 is carried out by the ECMWF’s Integrated Forecast System (IFS), which is described in the European Centre for Medium-Range Weather Forecasts (2016). The monthly MSLP data were obtained for the years 1979--2018.
 
 \section{Methods}
 \begin{figure}
 \begin{center}
-	\includegraphics[width=10cm]{"Figures/LDA_FlowChrt_v2"}
-	\caption{Processing steps for classification of \sdoff{} clusters using global mean sea level pressure reanalysis data aggregated over the preceding fall.}
+	\includegraphics[width=10cm]{"Figures/Flowchart/MODIS_SLP"}
+	\caption{Workflow diagram for predicting clustered \sdoff{} from ERA5 mean sea level pressure.}
 	\label{flow-chart}
 \end{center}
 \end{figure}
-An overview of the processing steps taken in this study is provided in Fig.~\ref{flow-chart}. S-Mode PCA was applied to both the gridded annual \sdoff{} data from \cite{Bevington2019} and the NCEP-DOE Reanalysis 2 monthly MSLP data aggregated over fall. The resulting loading vectors were spatially reconstructed for each dataset to allow for visual interpretation of the leading principle components. The leading principle component (PC) scores for the \sdoff{} data were then used as input in \textit{k}-means cluster analysis. The leading PC scores for the MSLP data were applied as input into linear discriminant analysis (LDA), where the \sdoff{} \textit{k}-means cluster results defined the groups. The LDA scores were used to train a \textit{k}th-nearest-neighbors (KNN) classifier. The leave-one-out overall accuracy was used to evaluate the ability of the global fall MSLP fields to predict the \sdoff{} clusters.
+
+The processing workflow applied in this study is illustrated by Fig.~\ref{flow-chart}. Principle component analysis (PCA) was applied to both the gridded annual \sdoff{} data from \cite{Bevington2019} and the ERA5 monthly MSLP data averaged over the fall months (Sep--Nov). The leading principle component (PC) scores derived from the \sdoff{} time series were then used as inputs into a \textit{k}-means cluster analysis. Decomposition of the \sdoff{} time series was only necessary for computational efficiency and repeatability of the \textit{k}-means cluster analysis, the spatial loadings are presented in Appendix \ref{ApdxA}. The leading PC scores from the MSLP time series served as candidate predictors in linear discriminant analysis (LDA) where the \sdoff{} \textit{k}-means cluster results defined groups. Using the leave-one-out cross-validated (LOOCV) overall accuracy as a cost metric, feature selection for predictive LDA was carried out using an evolutionary approach. For the subset LDA, standardized coefficients were related back to the spatially reconstructed MSLP loadings to help infer atmospheric mechanisms contributing to the discrimination of the \sdoff{} clusters.   
 
 \subsection{K-means cluster analysis of annual \sdoff{}}\label{kmeans}
 
 \subsubsection{Principal component analysis}\label{sdoffpca}
-Decomposition of the MODIS derived annual \sdoff{} dates over BC was performed using PCA before applying a \textit{k}-means cluster analysis. The type of PCA applied was in the form of S-Mode (time vs. location) outlined in \cite{Richman1986}, as this type of decomposition has been extensively applied in the field of atmospheric science and similar disciplines for studying major modes of temporal variation in spatially distributed attribute fields, such as timeseries of mean sea level pressure \citep{Urska2013}. The \sdoff{} and MSLP data was first centered and scaled before applying PCA using the R programming language 'stats' package \citep{r_stats}. Common to S-Mode PCA analysis is the visual interpretation of the spatially reconstructed loading vectors for each of the retained PCs \citep{Urska2013}. In this study the loadings for each retained PC are mapped in an effort to illustrate the primary modes of inter-annual \sdoff{} over BC, and aid in the interpretation of the \textit{k}-means classification results. 
+Decomposition of the MODIS derived annual \sdoff{} dates over BC was performed using PCA before applying a \textit{k}-means cluster analysis in order to allow efficient computation. The type of PCA applied was in the form of S-Mode (time vs. location) outlined in \cite{Richman1986}, as this type of decomposition has been extensively applied in the field of atmospheric science and similar disciplines for studying major modes of temporal variation in spatially distributed attribute fields, such as timeseries of mean sea level pressure \citep{Urska2013}. In S-Mode PCA, features represent locations (pixels), while observations correspond to repeated measures (years) (Fig.\ref{flow-chart}). For each location (pixel) the MSLP data was first zero centred by subtracting the mean MSLP from each observation, and scaled to have unit variance by dividing by the standard deviation before applying PCA. The PCA of both MSLP and \sdoff{} was computed using the R programming language 'stats' package \citep{r_stats}.
 
 \subsubsection{K-means cluster analysis}
-The resulting PC scores from the PCA analysis based on the \sdoff{} time-series data that explained 1\% or more of the total variance were used as input into a non-hierarchical \textit{k}-means clustering routine. Cluster analysis is by nature an exploratory analysis technique and there are many different clustering methods available \citep{Gotelli2013}. The \textit{k}-means is one of the most frequently applied clustering methods in environmental sciences, and an efficient version detailed in \cite{Hartigan1979} was applied in this study. The \textit{k}-means clustering routine is an iterative method that begins by partitioning the data into \textit{k} groups, forming \textit{k} initial group centres. The algorithm seeks to then find a \textit{k}-partition of the data with a locally optimal within-cluster sum of squares by moving observations from one cluster to another based on their dissimilarity score, typically euclidean distance \citep{Hartigan1979}. Various methods exist for determining the number of \textit{k}-clusters to use, in this study a elbow plot was used to determine the number of \textit{k} clusters to use for clustering the \sdoff{} timeseries. 
+The \sdoff{} PC scores were used as inputs into a non-hierarchical \textit{k}-means clustering routine. Cluster analysis is by nature an exploratory analysis technique and there are many different clustering methods available \citep{Gotelli2013}. The \textit{k}-means is one of the most frequently applied clustering methods in environmental sciences, and an efficient version detailed in \cite{Hartigan1979} was applied in this study. The \textit{k}-means clustering routine is an iterative method that begins by partitioning the data into \textit{k} groups, forming \textit{k} initial group centres. The algorithm seeks to then find a \textit{k}-partition of the data with a locally optimal within-cluster sum of squares by moving observations from one cluster to another based on their dissimilarity score, typically euclidean distance \citep{Hartigan1979}. Various methods exist for determining the number of \textit{k}-clusters to use, in this study silhouette plots were used to determine an appropriate number of clusters given the \sdoff{} data. Silhouette values represent how similar an observation is to its assigned cluster compared to the other clusters based on multivariate distance, and provide a graphical means for determining cluster appropriateness \citep{Rousseeuw1987}.
 
-\subsection{Decomposition of global fall mean sea level pressure}
-\subsubsection{Fall mean sea level pressure aggregation}
-The fall (Sep--Nov) season MSLP preceding the snow accumulation period was used to discriminate between the different \sdoff{} clusters described in Section \ref{kmeans}. For the fall period of each year the mean at each pixel was calculated from the monthly means present in the NCEP-DOE Reanalysis 2 MSLP data. The annual aggregated MSLP fields were then input into S-Mode PCA analysis using methods outlined in Section \ref{sdoffpca}. 
-
-\subsubsection{Principle component analysis}
-Decomposition in the form of S-Mode PCA was performed on the fall aggregated MSLP timeseries over the entire period of record 1979--2018. The scores from the PCA decomposition were used as input in LDA of the resulting \sdoff{} clusters described in Section \ref{kmeans}. The first 15 PCs were retained to allow computation of the within-group SSCP matrix in the LDA analysis provided the number of \sdoff{} observations. Loading scores for the resulting MSLP PCs were mapped to lend insight into possible atmospheric mechanisms contributing to the discrimination of the different \sdoff{} clusters. 
+\subsection{Decomposition of fall mean sea level pressure}
+The monthly data from the ERA5 MSLP reanalysis were averaged over the fall (Sep--Nov) season preceding the snow accumulation period at each location (pixel) for a given year, referred to hear as $MSLP_{FALL}$. The $MSLP_{FALL}$ was calculated for each year over the period 1979--2018. The $MSLP_{FALL}$ time series was transformed though decomposition using methods outlined in Section \ref{sdoffpca}. Common to S-Mode PCA analysis is the visual interpretation of the spatially reconstructed  eigenvectors for each of the retained PCs \citep{Urska2013}. The $MSLP_{FALL}$ eigenvectors, also referred to as loadings, were spatially reconstructed in this way to aid in the interpretation of potential underlying physical mechanisms associated with a given $MSLP_{FALL}$ PC. 
 
 \subsection{Linear Discriminant Analysis}
-\subsubsection{Formula and Methods}
 Linear discriminant analysis has multiple origins, both \cite{Fisher1936} and \cite{Mahalanobis1936} developed different approaches to discriminating between groups. There is however a mathematical relationship between Fisher’s linear discriminant functions (LDF) and the classification functions defined by Mahalanobis \citep[e.g.,][]{Kshirsagar1975}. Unlike cluster analysis, discriminant analysis assigns samples to groups or classes. Intuitively LDA is similar to PCA in that they both decompose the data to fewer dimensions. Where PCA is seeking to generate new axis that maximizes the variation within the data, LDA seeks to generate a new axis that maximizes the separation between established categories, and is therefore supervised. Mathematically, a linear combination of the original variables can be represented by Equation \ref{eq1},
 \begin{equation}
 	Z_{i} = a_{i1}Y_{1} + a_{i2}Y_{2} + ... + a_{in}Y_{n}
 	\label{eq1}
 \end{equation}
 
-Assuming the multivariate means $\mathbf{\bar{Y}}$ vary among groups, the goal of LDA is to find $\mathbf{a}$ in Equation \ref{eq1} that maximizes the among-group sum of squares for a given set of $Z_{i}$'s \citep{Gotelli2013}. Fisher’s approach proceeds by performing an eigen analysis of $\mathbf{W^{-1}B}$, where $\mathbf{B}$ is the between-group sum of squares cross-products (SSCP) matrix and $\mathbf{W}$ is the within-group SSCP matrix. Ordered by the resulting eigenvalues, the corresponding eigenvectors $\bm{a_{i}}$ are the coefficients in Equation \ref{eq1}, also referred to as canonical discriminant function coefficients. Classification can be performed by minimizing the Mahalanobis distance among observations within groups adjusted for the prior probabilities when they are not equal \citep{Venables2002}. In this study, the retained scores from the seasonal PCA decomposition of the global MSLP fields constituted the possible predictor variables, and the snow duration \textit{k}-means clusters served as factors to be classified. Linear discriminant analysis was carried out using the R programming language 'candisc' package \citep{r_candisc}. The discriminant functions coefficients can be standardized so that:
-\begin{equation}
-\bm a \bm s_{\bm i} = \bm a_{\bm i}\sqrt{W_{ii}}
-\label{eq2}
-\end{equation}
-Where the $i^{th}$ raw eigenvector is standardized by the square root of the $i^{th}$ diagonal element of the $\mathbf{W}$ matrix. The resulting within-group standardized discriminant functions can be used to assess the relative importance and relationship of the original input variables (MSLP PC scores) to the respective discriminant functions. 
+Assuming the multivariate means $\mathbf{\bar{Y}}$ vary among groups, the goal of LDA is to find $\mathbf{a}$ in Equation \ref{eq1} that maximizes the among-group sum of squares for a given set of $Z_{i}$'s \citep{Gotelli2013}. Fisher’s approach proceeds by performing an eigen analysis of $\mathbf{W^{-1}B}$, where $\mathbf{B}$ is the between-group sum of squares cross-products (SSCP) matrix and $\mathbf{W}$ is the within-group SSCP matrix. Ordered by the resulting eigenvalues, the corresponding eigenvectors $\bm{a_{i}}$ are the coefficients in Equation \ref{eq1}, also referred to as canonical discriminant function coefficients, or loadings. When the data is standardized, these loadings indicate which of the discriminating variables are most important in differentiating between the groups. Classification can be performed by minimizing the Mahalanobis distance among observations within groups adjusted for the prior probabilities when they are not equal \citep{Venables2002}. In this study, the $MSLP_{FALL}$ PCs constituted the possible predictor variables, and the \sdoff{} \textit{k}-means clusters served as factors to be classified. Proportional priors were assumed, and linear discriminant analysis was computed using the R programming language \textit{MASS} package \citep{Venables2002}.
 
 
-\subsection{\textit{k}-th-nearest-neighbors classification}\label{stepwise}
-A \textit{k}-th-nearest-neighbor (KNN) classifier was trained on the leading LDF scores using the 'caret' package in R programming language \citep{r_caret}. The KNN algorithm proceeds as follows: for each row in the test data set, the \textit{k} nearest vectors within the training set are identified, in this case using Euclidean distance. Classification is carried out through a majority vote, ties are randomly broken \citep{Venables2002}. To choose value of \textit{k} \cite{EnasChoi1986} suggest that when two groups of approximately equal size are present, the best \textit{k} is between $N^{3/8}$ and $N^{2/8}$, where N is the number of observations. To evaluate the overall accuracy of the classification leave-one-out cross-validation was applied. 
+\subsection{Evolution feature selection}
+A genetic algorithm (GA) is a stochastic optimization and search algorithm inspired by biological evolution and natural selection \citep{Mitchell1998}. A typical application of binary GAs in statistical modelling is subset selection \citep{Scrucca2013}. Feature selection is a natural extension of GAs using a binary string indicating the presence or absence of a predictor from an given candidate subset. The fitness of a candidate subset is usually represented by one of several model selection criteria, such as AIC or BIC, in the case of regression \citep{Bozdogan2003}. With the retained $MSLP_{FALL}$ PCs defining the predictor set, and the \sdoff{} clusters as the response variable, the subset of PCs that maximized the leave-one-out cross-validated (LOOCV) overall accuracy from a predictive LDA was found using a GA algorithm, applying principles described in \citep{Scrucca2013}. Specifically, the fitness of a candidate subset was defined as the LOOCV accuracy, where accuracy is determined through resampling. In the case that more than one model had the same LOOCV accuracy, the ratio of the distance between group means to the total variance of each group, in addition to the number of inputs were considered in identifying the most parsimonious model. Generations were continued so that the population mean fitness appeared to become asymptotic, suggesting no more gain in model fitness would be achieved through additional generations.  
 
 \section{Results}
 \subsection{Annual \sdoff{} date decomposition}
-\subsubsection{Eigenvalues and cumulative explained variance}
-The cumulative eigenvalues from the PCA performed on the annual M*D10A1 derived \sdoff{} data are shown in Fig. \ref{sdoffscree}. The first four PCs explain 5\% or more of the total variation in \sdoff{}, 40.6, 10.9, 7.6 and 6.0 percent respectively.
-\begin{figure}
-	\begin{center}
-	\includegraphics[width=10cm]{Figures/KNN/sdoff_scree}
-	\caption{Proportion of variance explained for each eigenvector from principle component analysis of \sdoff{} timeseries.}
-	\label{sdoffscree}
-	\end{center}
-\end{figure}
- 
+Principle component analysis of the annual MODIS derived \sdoff{} time series data was applied before cluster analysis to improve computational efficiency and repeatability of the \textit{k}-means clustering. All of the resulting PC scores were used as inputs into \textit{k}-means cluster analysis. The corresponding \sdoff{} spatial loadings are available in Appendix \ref{ApdxA}, and lend insight into the major modes of \sdoff{} variation over BC.   
 
-\subsubsection{Spatially constructed loadings of leading principle components}
-\begin{figure}[!h]
-	\begin{center}
-		\subfigure[\sdoff{} PC1 Loadings]{
-		\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/sdoff_pc1}\label{sdoff_load_a}}}\hspace{5pt}
-		\subfigure[\sdoff{} PC2 Loadings]{
-		\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/sdoff_pc2}\label{sdoff_load_b}}}\hspace{5pt}
-		\subfigure[\sdoff{} PC3 Loadings]{
-		\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/sdoff_pc3}\label{sdoff_load_c}}}\hspace{5pt}
-		\subfigure[\sdoff{} PC4 Loadings]{
-		\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/sdoff_pc4}\label{sdoff_load_d}}}\hspace{5pt}
-	\caption{The spatially reconstructed loadings of the leading four eigenvectors from principle component analysis of the \sdoff{} timeseries, years 2000--2018.}
-	\label{sdoff_load}
-\end{center}
-\end{figure}
- The spatially constructed loadings PC1--4 are shown in Fig. \ref{sdoff_load}. Wide spread negative loadings are observed throughout BC for PC1, except in the northern Coast and Mountains and the southern Alaska Mountains where high elevation glaciated areas have slightly positive PC1 scores (Fig. \ref{sdoff_load_a}). The loadings for PC1 are moderate in low lying regions, including part of the Taiga and Boreal Plains and the Central and Southern Interior. In this case PC1 seems to be describing the over all 'lateness' of \sdoff{}. 
- \par
- Show in Figure \ref{sdoff_load_b} are the loadings for PC2. The second PC seems to be contrasting snow duration in the mountainous regions of the Northern Interior and Sub-Boreal Interior, which have positive loadings, to the Taiga and Boreal Plains which display strong negative loadings. There also appears moderate positive loadings along the northern Coast Mountains. The remaining regions of BC appear to have only moderate negative loadings with PC2.
- \par
- For PC3 there is a strong gradient of positive loadings through the northern regions of BC, to negative loadings in the southern regions of BC (Fig. \ref{sdoff_load_c}). The strongest positive loadings are located throughout the Northern Boreal Mountains, Taiga Plains and the Yukon. Much of the Central and Southern Interior and Mountains, Georgia Depression including Washington and Southern Coast and Mountains have negative PC3 loadings.  
- \par
- The spatial pattern of PC4 is less pronounced, but appears to be contrasting positive \sdoff{} loadings over moderate elevations within the Central and Southern Interior to negative loadings over the Southern Coast Mountains, Southern Interior Mountains, and Muskwa-Hart ranges (Fig. \ref{sdoff_load_d}). 
- \par
- The remaining eigenvectors explain less then 5\% of the total variance in \sdoff{} and are not described here.
+\subsection{K-means \sdoff{} clusters}
 
-\subsection{K-means temporal clusters}
-\subsubsection{Class means and inter-comparisons}
-Using the scores from the PCA of the \sdoff{} timeseries \textit{k}-means cluster analysis was carried out. The elbow plot in Fig. \ref{elbowplot} indicates that 2 or 3 clusters is likely the optimal number of cluster for the \sdoff{} timeseries. We chose three \textit{k}-clusters to be used in the cluster analysis. The gridded difference from the timeseries mean \sdoff{} for each unique cluster is presented in Fig. \ref{clust_means}, the means for the first four PCs are summarized in Table \ref{sdoff-pc-means} by \sdoff{} cluster.
-
-
-\begin{figure}
-	\begin{center}
-		\includegraphics[width=10cm]{Figures/KNN/elbow_plot}
-		\caption{Elbow plot showing total within sum of the squares as a function of \textit{k}-clusters for the \sdoff{} timeseries data. A total of 3 clusters was decided as the optimal number for the data, indicated by the location of the 'elbow' within the plot.}
-		\label{elbowplot}
-	\end{center}
-\end{figure}
-
+\textit{k}-means cluster analysis was carried out on the PC scores from the PCA of the \sdoff{} time series. Using \textit{k} equal to 2, 3 and 4 clusters, silhouette plots were generated to help determine the most appropriate number of clusters given the \sdoff{} data. These results are illustrated in Fig. \ref{fig:sillhouettes}. Based on the silhouette scores, it was determined that \textit{k=2} clusters was the most appropriate number of clusters, and had the greatest average silhouette width (Fig. \ref{sil_k2}). Table \ref{tab:sdoff_k_ts} shows the \sdoff{} annual time series cluster results for \textit{k=2} clusters. 
 
 
 \begin{figure}[!h]
 	\begin{center}
-		\subfigure[TS Mean]{
-		\resizebox*{0.46\textwidth}{!}{\includegraphics{Figures/KNN/ts_mean}\label{clust_mean}}}\hspace{5pt}
+		\subfigure[]{
+			\resizebox*{0.46\textwidth}{!}{\includegraphics{Figures/SDoff/sil_k_2}\label{sil_k2}}}\hspace{5pt}
+		\subfigure[]{
+			\resizebox*{0.46\textwidth}{!}{\includegraphics{Figures/SDoff/sil_k_3}\label{sil_k3}}}\hspace{5pt}
+		\subfigure[]{
+			\resizebox*{0.46\textwidth}{!}{\includegraphics{Figures/SDoff/sil_k_4}\label{sil_k4}}}\hspace{5pt}
+		\caption{Silhouette plots corresponding to \textit{k}-clusters for the \sdoff{} time series data for 2--4 clusters, red line indicates the average silhouette score.}
+		\label{fig:sillhouettes}
+	\end{center}
+\end{figure}
+
+
+% latex table generated in R 3.6.3 by xtable 1.8-4 package
+% Thu Jun 18 10:42:48 2020
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{r|rrrrrrrrrrrrrrrrrrr}
+		\hline
+		Year & 2000 & 2001 & 2002 & 2003 & 2004 & 2005 & 2006 & 2007 & 2008 & 2009 \\ 
+		\hline
+		Cluster & 1 & 1 & 2 & 2 & 2 & 1 & 1 & 1 & 1 & 2\\
+		\hline
+		\hline
+		Year & 2010 & 2011 & 2012 & 2013 & 2014 & 2015 & 2016 & 2017 & 2018 \\
+		\hline
+		Cluster & 1 & 1 & 1 & 1 & 2 & 2 & 2 & 2 & 2 \\ 
+		\hline
+	\end{tabular}
+	\caption{The \sdoff{} time series cluster value from \textit{k}-means cluster analysis with \textit{k=2} for each hydrologic year over the period 2000--2018.} 
+	\label{tab:sdoff_k_ts}
+\end{table}
+
+From the clustered \sdoff{} time series shown in Tab. \ref{tab:sdoff_k_ts} the average \sdoff{} was calculated over the years corresponding to each cluster, as well as over the entire time series. Each \sdoff{} cluster average is displayed in Fig. \ref{fig:clust_means} as the difference from the \sdoff{} time series mean. In addition, the difference between Cluster 1 and Cluster 2 means is shown. 
+
+
+\begin{figure}[!h]
+	\begin{center}
+		\subfigure[Time Series Mean]{
+		\resizebox*{0.46\textwidth}{!}{\includegraphics{Figures/SDoff/ts_mean}\label{fig:clust_mean}}}\hspace{5pt}
 		\subfigure[Cluster 1]{
-			\resizebox*{0.46\textwidth}{!}{\includegraphics{Figures/KNN/cluster1_mean}\label{clust_1}}}\hspace{5pt}
+			\resizebox*{0.46\textwidth}{!}{\includegraphics{Figures/SDoff/cluster1_mean}\label{fig:clust_1}}}\hspace{5pt}
 		\subfigure[Cluster 2]{
-			\resizebox*{0.46\textwidth}{!}{\includegraphics{Figures/KNN/cluster2_mean}\label{clust_2}}}\hspace{5pt}
-		\subfigure[Cluster 3]{
-			\resizebox*{0.46\textwidth}{!}{\includegraphics{Figures/KNN/cluster3_mean}\label{clust_3}}}\hspace{5pt}
-		\caption{Difference of \sdoff{} from timeseries mean by cluster.}
-		\label{clust_means}
+			\resizebox*{0.46\textwidth}{!}{\includegraphics{Figures/SDoff/cluster2_mean}\label{fig:clust_2}}}\hspace{5pt}
+		\subfigure[Cluster Difference]{
+			\resizebox*{0.46\textwidth}{!}{\includegraphics{Figures/SDoff/clust_diff}\label{fig:clust_diff}}}\hspace{5pt}
+		\caption{Difference of \sdoff{} by cluster from the time series average \sdoff{} (a) (2000--2018), and difference between Cluster 1 mean (b) and Cluster 2 mean (c) \sdoff{}. See Table \ref{tab:sdoff_k_ts} for corresponding cluster years.}
+		\label{fig:clust_means}
 	\end{center}
 \end{figure}
 
-\begin{table}
-	\tbl{The mean scores for leading principle components derived from S-mode decomposition of annual \sdoff{} timeseries by \textit{k}-means cluster.}
-	{\begin{tabular}[l]{@{}lcccc}\toprule
-			Cluster & PC1 & PC2 & PC3 & PC4 \\
-			\colrule
-			1 & 642 & 303 & 62 & -72 \\
-			2 & -1766 & -251 & 43 & 5 \\
-			3 & 2997 & -139 & -282 & 178 \\
-			\botrule
-	\end{tabular}}
-	\label{sdoff-pc-means}
-\end{table}
+The mapped clusters shown in Fig. \ref{fig:clust_means}  indicate that mean \sdoff{} over Cluster 1 years is generally later than the mean \sdoff{} over the entire time series (Fig. \ref{fig:clust_1}), while mean \sdoff{} over Cluster 2 years is generally earlier than mean \sdoff{} over the entire time series (Fig. \ref{fig:clust_2}). This suggests the clusters have classified the \sdoff{} time series into early and late years relative to the time series mean \sdoff{}. The difference between the clusters, represented in Fig. \ref{fig:clust_diff} as Cluster 1 minus Cluster 2, reveals important spatial patterns. A median \sdoff{} difference of 14 days with and interquartile range of 11 days is observed in Fig. \ref{fig:clust_diff}. It appears that along the Coast and Mountains, Southern Alaskan and Georgia Depression regions there are the largest differences in \sdoff{} of around 15--30 days between Cluster 1 and Cluster 2 years. The northwest Central Interior and southwest Southern Interior Mountains also reveal relatively large differences in \sdoff{} between cluster years. Differences in \sdoff{} for Cluster 1 and Cluster 2 years appear less pronounced within some areas of the Northeast Plains and Southern Interior and Mountains regions.  
 
-
-The \sdoff{} timeseries mean is shown in Fig. \ref{clust_mean}. Cluster 1 which occurs during the hydrologic years 2000, 2002, 2003, 2004, 2005, 2009, 2013, 2016 and 2017 is associated with a moderate PC1 score and high PC2 score relative to the other clusters (Table \ref{sdoff-pc-means}). This is evident in Fig. \ref{clust_1} which reveals widespread negative anomalies of about 10 days throughout the province, and up to 30 days in the northern Central Interior. Cluster 1 appears to represent moderate \sdoff{} conditions. Cluster 2, which occurs hydrologic year 2001, 2006, 2007, 2008, 2010, 2011 and 2012 is associated with low PC1 and PC2 scores (Table \ref{sdoff-pc-means}). This is reflected in Fig. \ref{clust_2} which shows mostly positive anomalies ranging from 10--30 days. Knowledge of BC geography suggest that the strength of these anomalies are heavily influenced by elevation, low elevations appear to have greater anomalies. Pockets of negative anomalies are present, however, and might be associated with rapid land cover changes such as wildfire. Cluster 3, which occurs hydrologic years 2014, 2015 and 2018, has the highest PC1 score, low PC2 and PC3 scores, and a high PC4 score (Table \ref{sdoff-pc-means}). Cluster 3 has the earliest \sdoff{} dates of the three clusters, and likely correspond with El Ni\~{n}o events. This is evident in Fig. \ref{clust_3} where negative anomalies between 10--30 days are observed throughout BC, and anomalies between 30-40 days are present along coastal regions. It appears that higher elevations may be associated with greater Cluster 3 \sdoff{} anomalies. 
-
-
-\subsection{Fall mean sea level pressure decomposition}
-\subsubsection{Eigenvalues and cumulative explained variance}
-The total variance explained by each PC derived from PCA of the fall MSLP fields is shown in Fig. \ref{mslpscree}. The leading 15 PCs were retained for input in the LDA analysis and explain a cumulative 80\% of the total variance. The PC scores are averaged by \sdoff{} cluster in Table \ref{mslp_pc_means}. The Spearman correlations between the leading MSLP PC scores and the ONI, PDO, PNA and AO indices are summarized in Table \ref{mslp_tele_corr}. The fall ONI is significantly correlated with MSLP PC1 and PC4, the fall PDO reveals significant correlations with MSLP PC1, PC10 and PC11. The fall PNA has significant correlations with MSLP PC10, PC12 and PC15. The fall AO has strong correlation with MSLP PC3.  
+\subsection{Fall mean sea level pressure decomposition}\label{sec:mslp_decomp}
+The total variance explained by each PC derived from PCA of the $MSLP_{FALL}$ time series (1979--2018) is shown in Fig. \ref{fig:mslpscree}. Based on this on this plot, the leading 15 PCs were retained and represent the candidate inputs for LDA feature selection. The first 15 PCs explain 81\% of the total $MSLP_{FALL}$ variance. 
 
 \begin{figure}
 	\begin{center}
-		\includegraphics[width=10cm]{Figures/KNN/mslp_scree}
-		\caption{Proportion of variance explained for each of the eigenvectors from principle component analysis of NCEP-DOE Reanalysis 2 fall global mean sea level pressure timeseries over the period 1979--2018. Horizontal line indicates the percent of total variance explained by the 15\textsuperscript{th} PC, PCs below this were not retained.}
-		\label{mslpscree}
+		\includegraphics[width=10cm]{Figures/MSLP/mslp_scree}
+		\caption{Proportion of variance explained for each of the eigenvectors from principle component analysis of $MSLP_{FALL}$ time series over the period 1979--2018. Horizontal line indicates the percent of total variance explained by the 15\textsuperscript{th} PC (1.7\%), PCs below this were not retained in LDA.}
+		\label{fig:mslpscree}
 	\end{center}
 \end{figure}
 
-\begin{table}
-	\tbl{Mean sea level pressure principle component scores averaged by \sdoff{} cluster.}
-	{\begin{tabular}[l]{@{}lccccccccccccccc}\toprule
-			Cluster & 	PC1 & 	PC2 & 	PC3 & 	PC4 & 	PC5 & 	PC6 & 	PC7 & 	PC8 & 	PC9 & 	PC10 & 	PC11 & 	PC12 & 	PC13 & 	PC14 & 	PC15 \\
-			\colrule
-			1 & 	4.52 & 	-11 & 	3.96 & 	0.195 & 	22 & 	-3.22 & 	7.76 & 	-6.58 & 	4.17 & 	2.43 & 	-11.8 & 	-3.9 & 	-7.56 & 	-2.43 & 	2.49 \\ 
-			2 & 	43.8 & 	4.31 & 	-12.6 & 	-4.83 & 	0.564 & 	12.8 & 	-1.86 & 	4.27 & 	7.57 & 	-1.46 & 	9.73 & 	-4.17 & 	-4.86 & 	-0.038 & 	1.67 \\
-			3 & 	-24.2 & 	9.38 & 	-20.5 & 	-22.8 & 	11.2 & 	11.2 & 	-16.9 & 	20.7 & 	9.36 & 	7.51 & 	-14.2 & 	-10.6 & 	5.53 & 	1.36 & 	-14.3 \\
-			
-			\botrule
-	\end{tabular}}
-	\label{mslp_pc_means}
-\end{table}
+
+\subsection{Evolutionary Feature Selection}\label{ga_feat_selec}
+The leading PCs described in Section \ref{sec:mslp_decomp} comprised the set of candidate predictors for predictive LDA of the \sdoff{} clusters. Using principles described in \cite{Mitchell1998} the subset of $MSLP_{FALL}$ PC inputs that maximized the LOOCV accuracy of the LDA classifier were identified. With an initial population of 2000 randomly initialized candidate subsets, the initial population was evolved over a total of 150,0000 generations. The population mean LOOCV with each generation is plotted in Fig. \ref{fig:GA_pop_fit}. The absence of change seen in generations beyond 50,0000 suggests an optimal subset of features for classifying the \sdoff{} clusters was likely identified. There were several candidate feature subsets that obtained a LOOCV accuracy of 0.89, which was the maximum observed accuracy of any subset. However, the subset including $MSLP_{FALL}$ PC1, PC2, PC3, PC8, PC10 and PC11 had a high degree of separation with respect to LD1, but significantly fewer inputs than some of the other models with marginally greater separation and was chosen as the best feature subset. The loadings for the subset of $MSLP_{FALL}$ PCs selected for LDA are represented spatially in Appendix B.  
 
 
-\begin{table}
-	\tbl{Spearman correlation coefficent between fall mean sea level pressure principle component scores and the ONI, PDO, PNA and AO indices averaged over fall (Sep-Nov).}
-	{\begin{tabular}[l]{@{}lccccccccccccccc}\toprule
-		 Fall & PC1 & PC2 & PC3 & PC4 & PC5 & PC6 & PC7 & PC8 & PC9 & PC10 & PC11 & PC12 & PC13 & PC14 & PC15 \\ 
-		\colrule
-		ONI & 	-0.86* & 	-0.14 & 	-0.09 & 	-0.50* & 	-0.03 & 	0.4 & 	0.19 & 	0.24 & 	0.22 & 	0.19 & 	-0.25 & 	-0.02 & 	-0.19 & 	0.12 & 	0 \\ 
-		PDO & 	-0.78* & 	-0.29 & 	0.18 & 	-0.21 & 	0.42 & 	0.15 & 	0 & 	-0.06 & 	-0.11 & 	0.49* & 	-0.48* & 	-0.12 & 	-0.02 & 	-0.08 & 	-0.27 \\ 
-		PNA & 	0.15 & 	0.24 & 	-0.06 & 	0.24 & 	0.07 & 	-0.31 & 	-0.06 & 	0.21 & 	0.1 & 	-0.47* & 	-0.27 & 	-0.61* & 	0.01 & 	0.02 & 	-0.51* \\
-		AO & 	0.23 & 	0.24 & 	-0.78* & 	0.13 & 	-0.25 & 	0.39 & 	0.07 & 	-0.4 & 	0.25 & 	-0.23 & 	0.19 & 	0.24 & 	0.28 & 	0.15 & 	0.29 \\
-		\botrule
-	\end{tabular}}
-	\label{mslp_tele_corr}
-\end{table}
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=10cm]{Figures/LDA/GA_PopAvgLOOCV_TS.jpeg}
+		\caption{Mean population fitness (LOOCV accuracy) of LDA classifier over 150,0000 consecutive generations for an initial population size of 2000 randomly assigned $MSLP_{FALL}$ PC candidate feature subsets.}
+		\label{fig:GA_pop_fit}
+	\end{center}
+\end{figure}
 
-
-
- 
 
 \subsection{Linear Discriminant Analysis}
-\subsubsection{Linear discriminant model}
-The NCEP-DOE Reanalysis 2 MSLP PC scores were used as input in the LDA. Only the first 15 PCs were included as predictors to allow computation of the within-group SSCP matrix. The results of this analysis are presented in Table \ref{candisc_out}. Table \ref{candisc_out} indicates that the first discriminant function (LD1) accounts for the majority of the variation (95.4\%), where LD2 only accounts for 4.6\%. 
+The subset of $MSLP_{FALL}$ PCs described in \ref{ga_feat_selec} were used as input in LDA for predicting the \sdoff{} clusters. The $MSLP_{FALL}$ PCs are shown in Fig. \ref{PC_BoxPlt} by \sdoff{} cluster showing the relative separation each PC provides. Form these plots, we see that $MSLP_{FALL}$ PC1 seems to provide the most definitive separation of the \sdoff{} clusters. 
 
-\begin{table}
-	\tbl{Results from linear discriminant analysis of leading fall MSLP principle components over the \sdoff{} clusters.}
-	{\begin{tabular}[l]{@{}lcccccc}\toprule
-			DF & Eigenvalue & Percent & Apprx. F & Num. DF & Den. DF & Pr$>$F  \\
-			\colrule
-			LD1 &	201.18 & 95.4 & 6.09 & 30 & 4 &	0.0451 \\
-			LD2 &	9.79 & 4.6 & 2.10 & 14 & 3 & 0.2966 \\
-			\botrule
-	\end{tabular}}
-	\label{candisc_out}
+\begin{figure}
+	\begin{center}
+		\subfigure[$MSLP_{FALL}$ PC1]{
+			\resizebox*{0.24\textwidth}{!}{\includegraphics{Figures/LDA/PC1_Box}\label{PC1_Box}}}\hspace{5pt}
+		\subfigure[$MSLP_{FALL}$ PC2]{
+			\resizebox*{0.24\textwidth}{!}{\includegraphics{Figures/LDA/PC2_Box}\label{PC2_Box}}}\hspace{5pt}
+		\subfigure[$MSLP_{FALL}$ PC3]{
+			\resizebox*{0.24\textwidth}{!}{\includegraphics{Figures/LDA/PC3_Box}\label{PC3_Box}}}\hspace{5pt}
+		\subfigure[$MSLP_{FALL}$ PC8]{
+			\resizebox*{0.24\textwidth}{!}{\includegraphics{Figures/LDA/PC8_Box}\label{PC8_Box}}}\hspace{5pt}
+		\subfigure[$MSLP_{FALL}$ PC10]{
+			\resizebox*{0.24\textwidth}{!}{\includegraphics{Figures/LDA/PC10_Box}\label{PC10_Box}}}\hspace{5pt}
+		\subfigure[$MSLP_{FALL}$ PC11]{
+			\resizebox*{0.24\textwidth}{!}{\includegraphics{Figures/LDA/PC11_Box}\label{PC11_Box}}}\hspace{5pt}
+		\caption{Boxplots showing the distribution of each $MSLP_{FALL}$ PC selected for LDA by \sdoff{} cluster.}
+		\label{PC_BoxPlt}
+	\end{center}
+\end{figure}
+
+The linear discriminant coefficients and function scores are summarized in the following sections. 
+
+\subsubsection{Discriminant function coefficients}
+The first discriminant function (LD1) provides a linear transformation of the $MSLP_{FALL}$ subset of PCs into one dimension that has maximal separation between \sdoff{} group means. This linear transformation is defined by the coefficients $\bm{a_{i}}$ in Equation \ref{eq1}. The original LD1 coefficients are shown in Tab. \ref{tab:lda_coef}, and the standardized coefficients (loadings) are shown in Fig. \ref{fig:loadingplot}. The standardized loadings can be used to determine which of the PC inputs are most important in discriminating between the \sdoff{} clusters. Coefficients close to the origin (zero) have less influence on LD1 that those with coefficients larger (in absolute value) than zero. 
+
+% latex table generated in R 3.6.3 by xtable 1.8-4 package
+% Mon Jun 22 13:49:45 2020
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{rrrrrrr}
+		\hline
+		& PC1 & PC2 & PC3 & PC8 & PC10 & PC11 \\ 
+		\hline
+		LD1 Coef. & -0.00369 & -0.00152 & -0.00232 & 0.00350 & -0.00254 & -0.00402 \\ 
+		\hline
+	\end{tabular}
+	\caption{Discriminate function coefficients (loadings) for first (and only) linear discriminate function (LD1).} 
+	\label{tab:lda_coef}
 \end{table}
 
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=10cm]{Figures/LDA/LD1_LoadingPlt.jpeg}
+		\caption{Standardized loadings (coefficients) for the first linear discriminant function (LD1). Inputs are the subset of $MSLP_{FALL}$ PCs.}
+		\label{fig:loadingplot}
+	\end{center}
+\end{figure}
+
+The standardized loadings shown in Fig. \ref{fig:loadingplot} suggest that LD1 is contrasting PC1, PC2, PC3, PC10 and PC11 which all have negative standardized coefficients to PC8 which has a positive coefficient. Based on the magnitude of the standardized coefficients, we find $MSLP_{FALL}$ PC1 has the greatest influence on LD1, while PC10 has the least. 
 
 
 \subsubsection{Discriminant function scores}
-The mean score for LD1 and LD2 is summarized in Table \ref{mslp_lda_means} by \sdoff{} cluster. Figure \ref{scoreplot} illustrates how LD1 and LD2 contribute to the discrimination the \sdoff{} clusters. Cluster 3 appears well separated from Cluster 1 and Cluster 2 by LD1, where LD2 appears to primarily discriminate Cluster 1 from Cluster 2. It is evident that the \sdoff{} clusters are indeed linearly separable using the leading MSLP PC scores.
-
-
-\begin{table}
-	\tbl{Shown is mean LD1 and LD2 scores averaged by \sdoff{} cluster.}
-	{\begin{tabular}[l]{@{}lcc}\toprule
-			Cluster & LD1 & LD2 \\
-			\colrule
-			1 &	-4.21 &	3.24  \\
-			2 &	-7.01 &	-2.99  \\
-			3 &	29.9 &	-0.65 \\
-			\botrule
-	\end{tabular}}
-	\label{mslp_lda_means}
-\end{table}
-
+We use a scatterplot of the two \sdoff{} clusters projected onto the dimension of the LD1 discriminant
+solution to assess the separation of the \sdoff{} clusters (Fig. \ref{fig:ld1_scoreplot}). From this plot it appears that observations with LD1 scores less than zero indicate \sdoff{} Cluster 1 years, while LD1 scores greater than zero appear to correspond with \sdoff{} Cluster 2. LD1 provides good separation of the two \sdoff{} clusters, the greatest uncertainty occurs for LD1 scores close to the mean of zero, where the probability densities slightly overlap.  
 
 \begin{figure}
 	\begin{center}
-		\includegraphics[width=10cm]{Figures/KNN/scoreplot}
-		\caption{Score plot of LD2 versus LD1 for the linear discriminate analysis of the \sdoff{} clusters.}
-		\label{scoreplot}
+		\includegraphics[width=10cm]{Figures/LDA/LD1_ScorePlt.jpeg}
+		\caption{Distribution of LD1 scores by \sdoff{} cluster. Dashed line indicates the LD1 mean.}
+		\label{fig:ld1_scoreplot}
 	\end{center}
 \end{figure}
 
 
-\subsubsection{Discriminant function coefficients}
-The un-standardized LDA function coefficients are presented in Table \ref{lda_coef}. The standardized LDA function coefficients are plotted in Fig. \ref{loadingplot}. Figure \ref{loadingplot} indicates that LD1 is mainly the contrast of MSLP PC1, PC6, PC15 and PC3 which all have strong negative LD1 coefficients to PC13, PC8, PC12 and PC2 which have relatively strong positive coefficients. LD2 is mainly the contrast of PC1, PC6, PC10 and PC8 which all have strong negative LD2 coefficients to PC3, PC13, PC12 and PC14. The other PCs appear to contribute only moderately to LD1 and LD2, and are located nearest to the origin.  
+
+
+
+\subsubsection{Leave-one-out cross-validated classification accuracy}
+ With a total of 19 observations, the predictive LDA obtained a LOOCV accuracy of 0.89\%, misidentifying two of the observations (Tab. \ref{loocv}). Year 2001 was classified as a Cluster 2 year when in fact it was a Cluster 1 year. Year 2014 was classified as a Cluster 1 year when it was actually Cluster 2. 
 
 \begin{table}
-	\tbl{Unstandardized linear discriminate function coefficients for LD1 and LD2.}
-	{\begin{tabular}[l]{@{}lcc|lcc|lcc}\toprule
-			MSLP PC	&	LD1 Coef.	&	LD2 Coef. & MSLP PC	&	LD1 Coef.	&	LD2 Coef. & MSLP PC	&	LD1 Coef.	&	LD2 Coef.	\\
-		\colrule
-			PC1	&	-0.3360	&	-0.1113	& PC6	&	-0.3402	&	-0.1373	& PC11	&	0.1721	&	0.0493	\\
-			PC2	&	0.0742	&	-0.0390	& PC7	&	-0.0600	&	-0.0309	& PC12	&	0.1953	&	0.1006	\\
-			PC3	&	-0.1933	&	0.1325	& PC8	&	0.2692	&	-0.1326	& PC13	&	0.6783	&	0.1765	\\
-			PC4	&	-0.0270	&	-0.0137	& PC9	&	-0.0367	&	-0.0486	& PC14	&	-0.1514	&	0.1056	\\
-			PC5	&	-0.1096	&	-0.0920	& PC10	&	-0.0551	&	-0.1645	& PC15	&	-0.3798	&	0.0213	\\
-		\botrule
-	\end{tabular}}
-	\label{lda_coef}
-\end{table}
-
-
-\begin{figure}
-	\begin{center}
-		\includegraphics[width=10cm]{Figures/KNN/loadingplot}
-		\caption{Standardized loadings for LD1 and LD2 linear discriminant functions. These values are standardized to facilitate the interpretation of relative importance of LD1 and LD2 for each of the MSLP principle components. The closer a point is to zero, the less relative importance it has.}
-		\label{loadingplot}
-	\end{center}
-\end{figure}
-
-
-\subsubsection{Leave-one-out classification accuracy}
- With a total of 19 observations, using the methods of \cite{EnasChoi1986}, a \textit{k} of 3 was used in the KNN analysis. The overall accuracy of the KNN classification was good with all 19 observations correctly classified (Table \ref{loocv}).
-
-\begin{table}
-	\tbl{The leave-one-out cross validated confusion matrix for \textit{k}th-nearest-neighbors classification of the \sdoff{} clusters.}
+	\tbl{The leave-one-out cross validated confusion matrix for predictive LDA clasification of the \sdoff{} clusters.}
 	{\begin{tabular}[l]{@{}lcccc}\toprule
-			& \multicolumn{3}{c}{Classified} &  \\
-			True Cluster & Cluster 1 & Cluster 2 & Cluster 3 & Total \\
+			& \multicolumn{2}{c}{Classified} &  \\
+			True Cluster & Cluster 1 & Cluster 2 & Total \\
 			\colrule
-				Cluster 1 & 8 & 0 & 0 & 8 \\
-				Cluster 2 & 0 & 8 & 0 & 8 \\
-				Cluster 3 & 0 & 0 & 3 & 3 \\
+				Cluster 1 & 9 & 1 & 10 \\
+				Cluster 2 & 1 & 8 & 9 \\
 			\botrule
 	\end{tabular}}
 	\label{loocv}
 \end{table}
 
-
+For both 2001 and 2014 it is worth noting neutral ENSO conditions occurred leading up to and during the $MSLP_{FALL}$ period based on the Oceanic Ni\~{n}o Index (ONI) index \citep{Huang2017-ut}. This possibly explains why the LD1 scores for these years were close to the mean, and inaccurately classified.
 
 \section{Discussion}
 
-\subsection{Standardized Linear Discriminant Coefficients}
-The standardize LDA coefficients provide the opportunity to determine which of the MSLP PCs are most important to each LDF (Fig. \ref{loadingplot}). The MSLP PC1 explains ~16\% of the total variance in mean fall MSLP (Fig. \ref{mslpscree}). The spatially reconstructed loadings for PC1 are mapped in Fig. \ref{mslp_1_4}(a). There is a strong negative correlation between MSLP PC1 and both the ONI and PDO index (Table \ref{mslp_tele_corr}). The mapped loading values indicate that when MSLP PC1 is negative, there is high pressure over much of the equatorial Pacific, and likely is associated with the break down of the trade winds indicative of El Ni\~{n}o conditions (Fig. \ref{mslp_1_4}(a)). This is consistent with Table \ref{mslp_pc_means}, which indicates that negative PC1 scores are associated with Cluster 3, which has the earliest \sdoff{} dates of the three clusters, indicative of a shorter \sddur{} (Fig. \ref{clust_means}).
+\subsection{ERA5 Mean Sea Level Pressure and \sdoff{}}
+The standardized LDA coefficients reveal which of the $MSLP_{FALL}$ PCs are most influential on the classification of the \sdoff{} clusters (Fig. \ref{fig:loadingplot}). The $MSLP_{FALL}$ PC1 has the greatest influence on LD1 as it has the largest (in absolute value) standardized coefficient, it also explains the most variation in the $MSLP_{FALL}$ time series (Fig. \ref{fig:mslpscree}). The negative LD1 coefficient indicates that as $MSLP_{FALL}$ PC1 increases, LD1 decreases. This means that larger positive PC1 scores are associated Cluster 1, or relativity late \sdoff{} over BC, while larger negative PC1 scores are associated with Cluster 2, i.e., relativity early \sdoff{} over BC (Fig. \ref{fig:ld1_scoreplot}). The spatial loading pattern for $MSLP_{FALL}$ PC1 displays strong negative loadings centred over Oceania and Southeast Asia, while strong positive loadings occur off the western coast of equatorial South America and central Pacific Ocean (Fig. \ref{fig:mslp_1_4}). Variation in $MSLP_{FALL}$ at these centres is associated with the Walker circulation, which is closely linked with ENSO \citep{Horel1981}. A common metric of ENSO is the Southern Oscillation Index (SOI), which is the difference in MSLP between Darwin, Australia and Tahiti \citep{Trenberth1976}. Indeed, $MSLP_{FALL}$ PC1 is significantly correlated with both the SOI ($\rho = 0.92, p < 0.0001$) and ONI ($\rho = -0.89, p < 0.0001$). This would suggests that $MSLP_{FALL}$ PC1 is also correlated with sea-surface-temperatures over the tropical Pacific. Interestingly, PC1 also is significantly correlated ($\rho = 0.35, p = 0.0279$) with the Antarctic Oscillation index (AAO), and the PDO ($\rho = -0.65, p < 0.0001$).
 \par
-MSLP PC6 which explains about 5\% of the total variation in fall MSLP also has a strong negative standardized coefficient with LD1 (Fig. \ref{loadingplot}). Where PC1 discriminates Clusters 1 and Cluster 2 from Cluster 3, PC6 appears to primarily discriminate Clusters 2 and 3 from Cluster 1 (Table \ref{mslp_pc_means}). MSLP PC6 also has a significant negative standardized coefficient with LD2 (Fig. \ref{loadingplot}). The strong negative loadings that occur centered over Alaska suggest that MSLP PC6 is likely closely linked to the position of the Polar Jet Stream (Fig. \ref{mslp_5_8}(b)). The MSLP PC13 appears to contrast MSLP PC1 and PC6 in its influence on LD1 (Fig. \ref{loadingplot}), i.e., positive MSLP PC13 scores are associated with Cluster 3 years (Table \ref{mslp_pc_means}). The spatial loadings for MSLP PC13 reveals moderate positive values centered over the Alutian Low, Alaska, Yukon and northern BC, which partially explains PC13s influence on \sdoff{} (Fig. \ref{mslp_13_15}(a)). MSLP PC13 also has a strong positive coefficient with LD2 (Fig. \ref{loadingplot}), indicating that it also contributes to the discrimination of Cluster 1 and Cluster 2.
+Like $MSLP_{FALL}$ PC1, PC2 has a negative standardized coefficient with LD1 (Fig. \ref{fig:loadingplot}). The spatial loadings for PC2 reveal strong positive loadings throughout Antarctica, while negative loadings occur in the sub-polar regions over the Southern Ocean (Fig. \ref{fig:mslp_1_4}). $MSLP_{FALL}$ PC2 appears to be primarily contrasting the polar high to the sub-polar low in the southern hemisphere. This suggests that as MSLP increases over the Antarctic polar high, \sdoff{} over BC tends to be later. The loadings for $MSLP_{FALL}$ PC2 show a similar pattern to the southern hemisphere annular mode described in \cite{Thompson2000}, and is significantly correlated ($\rho = -0.88, p < 0.0001$) with the AAO.   
 \par
-MSLP PC3 has a strong positive coefficient with LD2 (Fig. \ref{loadingplot}), and a significant negative correlation with the AO (Table \ref{mslp_tele_corr}). This is consistent with the MSLP PC3 loading coefficients mapped in Fig. \ref{mslp_13_15}(a), which reveals strong positive loadings throughout the Arctic, and strong negative loadings over the northern Pacific and Atlantic Oceans. Outside of PC1, the main difference between Cluster 1 and Cluster 2 is their PC2 scores (Table \ref{sdoff-pc-means}). This suggest that MSLP PC3 and the AO are important in dictating \sdoff{} between the Taiga and Boreal Plains and the Northern Boreal Mountains and Sub-Boreal Interior regions of BC (Fig. \ref{sdoff_load_b}). MSLP PC8 has a relatively strong negative coefficient with LD2 (Fig. \ref{loadingplot}). The MSLP PC8 influence on LD2 may be associated with strong positive loadings centered over the North Pacific Ocean visible in Fig. \ref{mslp_5_8}(d). The results show MSLP PC10 has a relatively strong negative coefficient with LD2 (Fig. \ref{loadingplot}). There is a significant positive correlation between MSLP PC10 and the PDO, and a significant negative correlation with the PNA (Table \ref{mslp_tele_corr}). We see that positive values of MSLP PC10 are associated with Cluster 1 (Table \ref{mslp_pc_means}), and therefore positive \sdoff{} PC2 scores (Table \ref{sdoff-pc-means}). 
+Similar to $MSLP_{FALL}$ PC2, PC3 appears to be contrasting the polar high to the subpolar lows, however, in the northern hemisphere (Fig. \ref{fig:mslp_1_4}). There are wide spread negative loadings spatially corresponding with the northern polar high. Positive loading occur at the subpolar low south of Alaska, and over much of the Pacific and Oceania. This pattern is consistent with the the general loading pattern of the northern hemisphere annular mode \citep{Thompson2000}, and $MSLP_{FALL}$ PC3 is indeed correlated ($\rho = 0.63, p < 0.0001$) with the Arctic Oscillation (AO). The negative coefficient with LD1 suggests that as $MSLP_{FALL}$ increases over the polar high, \sdoff{} tends to be earlier throughout BC. The $MSLP_{FALL}$ PC3 is also significantly correlated ($\rho = 0.31, p = 0.0494$) with the North Atlantic Oscillation (NAO).  
+\par
+The $MSLP_{FALL}$ PC8 is the only PC with a positive LD1 coefficient (Fig. \ref{fig:loadingplot}). There are strong negative loadings over much of western Canada, Alaska and north Pacific, while positive loadings are observed over the Aleutian Low (Fig. \ref{fig:mslp_5_6}). This indicates that PC8 may capture the $MSLP_{FALL}$ pressure gradient between the Canadian high and Aleutian Low, and likely is related to the position and orientation of the polar jet stream. The positive standardized LD1 coefficient indicates that as $MSLP_{FALL}$ increases over western Canada, Alaska and north Pacific, mean \sdoff{} over BC tends to be later. $MSLP_{FALL}$ PC8 has no significant correlation with any established atmosphere-ocean indices (i.e., ONI, SOI, AAO, AO, NAO, PNA or PDO). 
+\par
+For $MSLP_{FALL}$ PC10 positive loadings are seen over much of western BC (Fig. \ref{fig:mslp_5_6}). This suggests that as $MSLP_{FALL}$ over western BC increases \sdoff{} tends to be later. $MSLP_{FALL}$ PC10 appears to capture very local  $MSLP_{FALL}$ PC10 variation along the Coast and Mountains of BC, where differences in \sdoff{} between Cluster 1 and Cluster 2 years are large. However, $MSLP_{FALL}$ PC10 has the least influence on LD1 (Fig. \ref{fig:loadingplot}). 
+\par
+$MSLP_{FALL}$ PC11 has the most influence on LD1 outside of PC1 (Fig. \ref{fig:loadingplot}). The loadings for PC11 show strong positive coefficients centred over the north Pacific Aleutian Low, and strong negative coefficients located over the southeast United States and north of Alaska (Fig. \ref{fig:mslp_5_6}). It may be that as $MSLP_{FALL}$ increases near the Aleutian Low, and decreases north of Alaska, moisture is directed towards BC and cold arctic air is more likely to penetrate further south, leading to longer snow persistence over BC. These conditions are consistent with the observed positive LD1 coefficient (Fig. \ref{fig:loadingplot}). $MSLP_{FALL}$ PC11 also appears to be correlated ($\rho = -0.39, p = 0.0133$) with the Pacific North American (PNA) pattern, which has been shown to have an important influence on snow accumulation and melt over BC \citep{Moore1996-xr}.
+
+\subsection{Uncertainties}
+While this study has demonstrated that principle components of $MSLP_{FALL}$ can discriminate between clustered patterns of \sdoff{} over BC, there are some uncertainties. These include how robust these signals are over time. While indices such as ONI evolve at a rate which allows for an annual mean signature, some of the more regionally specific $MSLP_{FALL}$ PCs may change more rapidly. This may suggest changing the aggregation period from the fall period could have a significant impact on the results. However, this is not determined in this study. In addition, though LOOCV was used to establish the out-of-sample accuracy of the predictive LDA, a longer time series would allow for a more robust validation of the overall classification accuracy of the \sdoff{} clusters. 
 
 \subsection{Implications}
-The results in this study show that global MSLP fields aggregated over fall provide sufficient information to make accurate predictions of \sdoff{} patterns for the following winter, defined by clusters. The study results also confirm that although atmosphere-ocean indices describe the majority of annual variation in \sdoff{} over BC, especially when multiple indices are used, some residual variation is captured by non-standard indices, in this case represented by MSLP PCs not significantly correlated with any of the major indices, but shown to be important to the discrimination of the \sdoff{} clusters in BC. For example, the results indicate that MSLP PC6 and PC13 have a significant influence on the LDFs (Fig. \ref{loadingplot}), but neither reveals a significant correlation with any of the atmosphere-ocean indices (Table \ref{mslp_tele_corr}).
+The cluster analysis of \sdoff{} essentially split the \sdoff{} time series into 'early' and 'late' years relative to the time series mean (Fig. \ref{fig:clust_means}). At locations where the difference between these \sdoff{} clusters is large, there is likely to be significant variation in phenology and hydrology that correspond to the timing of \sdoff{}. The results in this study show that specific PCs of $MSLP_{FALL}$ can be used to discriminate between clusters of remotely sensed \sdoff{} over the previous 19 years when input into a LDA classifier. The spatial loadings for the subset of $MSLP_{FALL}$ PCs help provide insight into some plausible atmospheric mechanisms that explain the ability of each $MSLP_{FALL}$ PC to discriminate between the \sdoff{} clusters over BC. As future satellite data becomes available we will be able to more adequately validate the relationships demonstrated in this study. 
 
-
-
-\subsection{Study Design Rational}
-By performing S-Mode PCA on the \sdoff{} timeseries the primary modes of inter-annual variation are revealed by reconstruction of the loading scores spatially. Although each of the \sdoff{} principle component scores could be predicted from the global MSLP fields allowing for continuous predictions of \sdoff{} over BC, a \textit{k}-means clustering approach was applied in this study. A clustering approach has the benefit of reducing the number of response variables to only one. However, there is within-cluster variation that is lost with this approach. In addition, the true number of \sdoff{} clusters is not known. The elbow plot in Figure \ref{elbowplot} suggests that 3 clusters is a reasonable number of clusters, however, with a longer timeseries it may be evident that more clusters may be appropriate. Yet, \sdoff{} clusters provide a succinct way to analyze the influence of global MSLP on inter-annual \sdoff{} patterns over BC. While not necessary, the decomposition of the MSLP PC scores in a descriptive LDA framework provides insight into the relative influence that each of the leading MSLP PCs has on the discrimination of the \sdoff{} clusters. It also has the benefit of providing a reduced number of covariates that are a linear combination of the original variables, maximizing the separability between the \sdoff{} clusters. These LDA scores can then be applied in any classification framework, in this study a KNN classifier was used to make predictions of the \sdoff{} clusters.
 
 
 \section{Conclusion}
-
-We used MODIS derived 500 m gridded \sdoff{} and global MSLP datasets to determine the influence of teleconnections and non-standard atmosphere-ocean modes on inter-annual snow cover patterns in BC. Standard atmosphere-ocean indices explain the majority of variation in inter-annual \sdoff{} however non-standard indices also play an important role in our understanding of \sdoff{} variability. We derived the principal components of both the MODIS and MSLP gridded data, then detected the snow clusters present in our 18 year timeseries via \textit{k}-means cluster analysis. The principal component scores of the MSLP data were decomposed in a descriptive LDA framework, with \sdoff{} clusters defining groups. The resulting LDF scores were used in a  KNN classification framework, a leave one out error assessment suggested that fall MSLP is a good predictor of the different \sdoff{} clusters. Using descriptive LDA we determine the contribution of each of the leading fall MSLP principle components to the discrimination of the \sdoff{} clusters. Our findings demonstrate that fall global MSLP fields allow for accurate predictions of \sdoff{} clusters over BC.
+ We applied MODIS derived 500 m gridded \sdoff{} over BC as input into a \textit{k}-means cluster analysis resulting in two \sdoff{} clusters representing 'early' and 'late' conditions relative to the time series mean \sdoff{} (2000--2018). We aggregated global ERA5 MSLP over the fall season ($MSLP_{FALL}$) annually for the period 1979--2018. Principle component analysis in S-Mode (time vs. location) was applied to the $MSLP_{FALL}$ time series, and the resulting PC scores were joined with the \sdoff{} clusters by year. Using a evolutionary approach, the subset of $MSLP_{FALL}$ PCs that maximized the leave-one-out cross-validated (LOOCV) classification accuracy of the \sdoff{} clusters were identified using a predictive linear discriminate classifier (LDA). For the subset LDA model, an overall predictive LOOCV accuracy of 0.89 was observed, suggesting good discrimination of the \sdoff{} clusters over the time series. The standardized linear discriminate function coefficients were plotted and related to the spatially reconstructed $MSLP_{FALL}$ eigenvectors, or loadings. This comparison allowed us to define the relationship between the subset $MSLP_{FALL}$ loading patterns and atmosphere-ocean modes know to influence the winter climate of western Canada, such as ENSO. However, the $MSLP_{FALL}$ PCs do not represent a standard index of these atmospheric phenomena. Generally, we find the \sdoff{} clusters are sensitive to major variation in the atmosphere, as the leading three $MSLP_{FALL}$ PCs, closely related to ENSO, and the southern and northern annular modes, respectively, were included in the subset LDA. However, several PCs capturing more subtle $MSLP_{FALL}$ variation influencing \sdoff{} were also included in the subset LDA. In locations where the difference in \sdoff{} between clusters is significant this study could have important implications for disciplines where the timing of snow melt is an important forcing, such as the timing of spring freshet and peak flows.
 \par
-The overall framework of our findings is not likely to change as the dense timeseries of gridded snow cover data continues. The Visible Infrared Imaging Radiometer Suite (VIIRS) satellite sensor aboard the Suomi NPP and NOAA-20 (JPSS1) satellites provides continuity from the MODIS imagery and will allow for further investigation of snow cover over time. In addition, dense timeseries high resolution satellite imagery being collected by small cubsat constellations by private sector companies, such as Planet, may allow for high resolution studies of timeseries gridded snow cover data. 
+The overall framework of our findings is not likely to change as the dense timeseries of gridded snow cover data continues. The Visible Infrared Imaging Radiometer Suite (VIIRS) satellite sensor aboard the Suomi NPP and NOAA-20 (JPSS1) satellites provides continuity from the MODIS imagery and will allow for further investigation of snow cover over time. In addition, dense timeseries high resolution satellite imagery being collected by small cubsat constellations by private sector companies, such as Planet, may allow for high resolution studies of time series gridded snow cover data. 
 
 
 \subsection{Acknowledgements}
 
-The authors are very grateful to Stephen Déry, Michael Allchin, Yuexian Wang, John Rex, and William MacKenzie for conversations that helped inform the early direction of this work. Also, we acknowledge the open data science community, specifically free access to MODIS, Google Earth Engine, R, Python, and QGIS. 
+The authors are very grateful to Michael Allchin, Stephen Déry, Yuexian Wang, John Rex, and William MacKenzie for conversations that helped inform the early direction of this work. Also, we acknowledge the open data science community, specifically free access to River Forecast Centre, ERA5, MODIS, Google Earth Engine, R, Python, and QGIS. 
 
 \subsection{Funding}
 
-This research has been supported by the British Columbia Ministry of Forests, Lands, Natural Resource Operations and Rural Development (MFLNRORD grant no. R\&S-28) and by the Natural Sciences and Engineering Research Council of Canada (NSERC funding reference number 518294).
+This research has been supported by the British Columbia Ministry of Forests, Lands, Natural Resource Operations and Rural Development (MFLNRORD grant no. R\&S-28).
 
 \subsection{Supplemental Material}
 
@@ -386,74 +336,112 @@ We will provide the coding in a BC Government GitHub repository once peer-review
 \begin{appendices}
 \appendix
 
-\section{Mean Sea Level Pressure Spatial Loading Scores}\medskip\label{ApdxA}
+\section{\sdoff{} Spatial Loadings}\medskip\label{ApdxA}
+
+\begin{figure}
+	\begin{center}
+		\subfigure[\sdoff{} PC1 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc1}\label{sdoff_load_1}}}\hspace{5pt}
+		\subfigure[\sdoff{} PC2 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc2}\label{sdoff_load_2}}}\hspace{5pt}
+		\subfigure[\sdoff{} PC3 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc3}\label{sdoff_load_3}}}\hspace{5pt}
+		\subfigure[\sdoff{} PC4 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc4}\label{sdoff_load_4}}}\hspace{5pt}
+		\caption{The spatially reconstructed loadings of the leading four eigenvectors from principle component analysis of the \sdoff{} timeseries, years 2000--2018.}
+		\label{sdoff_load_1_4}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+		\subfigure[\sdoff{} PC5 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc5}\label{sdoff_load_5}}}\hspace{5pt}
+		\subfigure[\sdoff{} PC6 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc6}\label{sdoff_load_6}}}\hspace{5pt}
+		\subfigure[\sdoff{} PC7 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc7}\label{sdoff_load_7}}}\hspace{5pt}
+		\subfigure[\sdoff{} PC8 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc8}\label{sdoff_load_8}}}\hspace{5pt}
+		\caption{The spatially reconstructed loadings of the leading four eigenvectors from principle component analysis of the \sdoff{} timeseries, years 2000--2018.}
+		\label{sdoff_load_5_8}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+		\subfigure[\sdoff{} PC9 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc9}\label{sdoff_load_9}}}\hspace{5pt}
+		\subfigure[\sdoff{} PC10 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc10}\label{sdoff_load_10}}}\hspace{5pt}
+		\subfigure[\sdoff{} PC11 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc11}\label{sdoff_load_11}}}\hspace{5pt}
+		\subfigure[\sdoff{} PC12 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc12}\label{sdoff_load_12}}}\hspace{5pt}
+		\caption{The spatially reconstructed loadings of the leading four eigenvectors from principle component analysis of the \sdoff{} timeseries, years 2000--2018.}
+		\label{sdoff_load_9_12}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+		\subfigure[\sdoff{} PC13 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc13}\label{sdoff_load_13}}}\hspace{5pt}
+		\subfigure[\sdoff{} PC14 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc14}\label{sdoff_load_14}}}\hspace{5pt}
+		\subfigure[\sdoff{} PC15 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc15}\label{sdoff_load_15}}}\hspace{5pt}
+		\subfigure[\sdoff{} PC16 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc16}\label{sdoff_load_16}}}\hspace{5pt}
+		\caption{The spatially reconstructed loadings of the leading four eigenvectors from principle component analysis of the \sdoff{} timeseries, years 2000--2018.}
+		\label{sdoff_load_13_16}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+		\subfigure[\sdoff{} PC17 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc17}\label{sdoff_load_17}}}\hspace{5pt}
+		\subfigure[\sdoff{} PC18 Loadings]{
+			\resizebox*{0.38\textwidth}{!}{\includegraphics{Figures/SDoff/sdoff_pc18}\label{sdoff_load_18}}}\hspace{5pt}
+		\caption{The spatially reconstructed loadings of the leading four eigenvectors from principle component analysis of the \sdoff{} timeseries, years 2000--2018.}
+		\label{sdoff_load_17_18}
+	\end{center}
+\end{figure}
+
+
+
+\section{Mean Sea Level Pressure Spatial Loading Scores}\medskip\label{ApdxB}
 
 \begin{figure}
 	\begin{center}
 		\subfigure[MSLP PC1]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc1}}}\hspace{5pt}
+			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/MSLP/mslp_pc1}}}\hspace{5pt}
 		\subfigure[MSLP PC2]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc2}}}\hspace{5pt}
+			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/MSLP/mslp_pc2}}}\hspace{5pt}
 		
 		\subfigure[MSLP PC3]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc3}}}\hspace{5pt}
-		\subfigure[MSLP PC4]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc4}}}\hspace{5pt}
-		\caption{Spatially reconstructed PC1--PC4 loading scores from PCA of the NCEP-DOE Reanalysis 2 fall mean sea level pressure over the period 1979-2018.}
-		\label{mslp_1_4}
-	\end{center}
-\end{figure}
-
-\begin{figure}
-	\begin{center}
-		\subfigure[MSLP PC5]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc5}}}\hspace{5pt}
-		\subfigure[MSLP PC6]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc6}}}\hspace{5pt}
-		
-		\subfigure[MSLP PC7]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc7}}}\hspace{5pt}
+			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/MSLP/mslp_pc3}}}\hspace{5pt}
 		\subfigure[MSLP PC8]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc8}}}\hspace{5pt}
-		\caption{Spatially reconstructed PC5--PC8 loading scores from PCA of the NCEP-DOE Reanalysis 2 fall mean sea level pressure over the period 1979-2018.}
-		\label{mslp_5_8}
+			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/MSLP/mslp_pc8}}}\hspace{5pt}
+		\caption{Spatially reconstructed PC1, PC2, PC3 and PC8 loadings from PCA of the $MSLP_{FALL}$ time series (1979--2018). Units are dimensionless.}
+		\label{fig:mslp_1_4}
 	\end{center}
 \end{figure}
 
 \begin{figure}
 	\begin{center}
-		\subfigure[MSLP PC9]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc9}}}\hspace{5pt}
 		\subfigure[MSLP PC10]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc10}}}\hspace{5pt}
-		
+			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/MSLP/mslp_pc10}}}\hspace{5pt}
 		\subfigure[MSLP PC11]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc11}}}\hspace{5pt}
-		\subfigure[MSLP PC12]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc12}}}\hspace{5pt}
-		\caption{Spatially reconstructed PC9--PC12 loading scores from PCA of the NCEP-DOE Reanalysis 2 fall mean sea level pressure over the period 1979-2018.}
-		\label{mslp_9_12}
+			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/MSLP/mslp_pc11}}}\hspace{5pt}
+		\caption{Spatially reconstructed PC10 and PC11 loadings from PCA of the $MSLP_{FALL}$ time series (1979--2018). Units are dimensionless.}
+		\label{fig:mslp_5_6}
 	\end{center}
 \end{figure}
 
-\begin{figure}
-	\begin{center}
-		\subfigure[MSLP PC13]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc13}}}\hspace{5pt}
-		\subfigure[MSLP PC14]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc14}}}\hspace{5pt}
-		
-		\subfigure[MSLP PC15]{
-			\resizebox*{0.48\textwidth}{!}{\includegraphics{Figures/KNN/mslp_pc15}}}\hspace{5pt}
-		\caption{Spatially reconstructed PC13--PC15 loading scores from PCA of the NCEP-DOE Reanalysis 2 fall mean sea level pressure over the period 1979-2018.}
-		\label{mslp_13_15}
-	\end{center}
-\end{figure}
 
 
 \end{appendices}
-
-
-
 
 \end{document}
