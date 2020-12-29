@@ -218,8 +218,7 @@ calc_sep<-function(lda_mod,df)
 #Function for plotting LD1 scores @ k=2
 plot_multi_histogram <- function(df, feature, label_column) {
   plt <- ggplot(df, aes(x=eval(parse(text=feature)), fill=eval(parse(text=label_column)))) +
-    geom_histogram(alpha=0.7, position="identity", aes(y = ..density..), color="black",bins = 19) +
-    geom_density(alpha=0.7) +
+    geom_histogram(position="identity", aes(y = ..density..), color="black",bins = 19) +
     geom_vline(aes(xintercept=mean(eval(parse(text=feature)))), color="black", linetype="dashed", size=1) +
     labs(x=feature, y = "Density") +
     theme_classic(base_size = 14)
@@ -243,7 +242,7 @@ colnames(mean_r2)[2]<-"Generation"
 
 ggplot(mean_r2)+geom_line(aes(x=Generation,y=mean_r2)) + theme_classic() + labs(y = "Population Avg. Fitness")
 
-ggsave('Manuscript/tatolatex/Figures/LDA/GA_PopAvgLOOCV_TS.jpeg')
+ggsave('Manuscript/FINAL_SUBMIT_LATEX/Figures/fig6.eps',device = "eps")
 
 
 sep_vec<-c()
@@ -312,17 +311,17 @@ lda_group_means<-lda_group_means[,order(colnames(lda_group_means))]
 xtable(lda_group_means,label="tab:lda_group_means",caption<-caption)
 
 ggplot(lda_matx) + geom_boxplot( aes(x = as.factor(k_clust), y = PC1)) + theme_classic(base_size = 28) + labs(y = expression(MSLP[FALL]~PC1),x = expression(SD[OFF]~Cluster))
-ggsave('Manuscript/tatolatex/Figures/LDA/PC1_Box.png')
+ggsave('Manuscript/FINAL_SUBMIT_LATEX/Figures/Orig/PC1_Box.eps', device = "eps")
 ggplot(lda_matx) + geom_boxplot( aes(x = as.factor(k_clust), y = PC2)) + theme_classic(base_size = 28) + labs(y = expression(MSLP[FALL]~PC2),x = expression(SD[OFF]~Cluster))
-ggsave('Manuscript/tatolatex/Figures/LDA/PC2_Box.png')
+ggsave('Manuscript/FINAL_SUBMIT_LATEX/Figures/Orig/PC2_Box.eps', device = "eps")
 ggplot(lda_matx) + geom_boxplot( aes(x = as.factor(k_clust), y = PC3)) + theme_classic(base_size = 28) + labs(y = expression(MSLP[FALL]~PC3),x = expression(SD[OFF]~Cluster))
-ggsave('Manuscript/tatolatex/Figures/LDA/PC3_Box.png')
+ggsave('Manuscript/FINAL_SUBMIT_LATEX/Figures/Orig/PC3_Box.eps', device = "eps")
 ggplot(lda_matx) + geom_boxplot( aes(x = as.factor(k_clust), y = PC8)) + theme_classic(base_size = 28) + labs(y = expression(MSLP[FALL]~PC8),x = expression(SD[OFF]~Cluster))
-ggsave('Manuscript/tatolatex/Figures/LDA/PC8_Box.png')
+ggsave('Manuscript/FINAL_SUBMIT_LATEX/Figures/Orig/PC8_Box.eps', device = "eps")
 ggplot(lda_matx) + geom_boxplot( aes(x = as.factor(k_clust), y = PC10)) + theme_classic(base_size = 28) + labs(y = expression(MSLP[FALL]~PC10),x = expression(SD[OFF]~Cluster))
-ggsave('Manuscript/tatolatex/Figures/LDA/PC10_Box.png')
+ggsave('Manuscript/FINAL_SUBMIT_LATEX/Figures/Orig/PC10_Box.eps', device = "eps")
 ggplot(lda_matx) + geom_boxplot( aes(x = as.factor(k_clust), y = PC11)) + theme_classic(base_size = 28) + labs(y = expression(MSLP[FALL]~PC11),x = expression(SD[OFF]~Cluster))
-ggsave('Manuscript/tatolatex/Figures/LDA/PC11_Box.png')
+ggsave('Manuscript/FINAL_SUBMIT_LATEX/Figures/Orig/PC11_Box.eps', device = "eps")
 
 
 #Get LD1 scores and plot by class (score plot for k=2)
@@ -334,7 +333,7 @@ LD1$LD1_Class<-as.factor(LD1_Class)
 
 plot_multi_histogram(LD1,'LD1','LD1_Class')
 
-ggsave('Manuscript/tatolatex/Figures/LDA/LD1_ScorePlt.png')
+ggsave('Manuscript/FINAL_SUBMIT_LATEX/Figures/fig9.eps',device="eps")
 
 
 #Scale MSLP PC data 
@@ -349,7 +348,7 @@ Load_Coef<-as.data.frame(lda_mod$scaling)
 Load_Coef$PC<-rownames(Load_Coef)
 
 ggplot(Load_Coef, aes(PC, LD1)) + geom_col(width=.25) + theme_classic() + labs(x="") + geom_hline(yintercept = 0)
-ggsave('Manuscript/tatolatex/Figures/LDA/LD1_LoadingPlt.jpeg')
+ggsave('Manuscript/FINAL_SUBMIT_LATEX/Figures/fig8.eps',device="eps")
 
 
 save.image(file = "SDoff_LDA_env.Rdata")
