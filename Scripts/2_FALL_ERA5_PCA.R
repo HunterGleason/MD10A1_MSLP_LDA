@@ -105,7 +105,7 @@ ggplot(as.data.frame(cbind(c(1:40),prop_varex)), aes(x=V1, y=prop_varex)) +
   geom_hline(yintercept=prop_varex[15])+
   theme_classic()
 
-ggsave("Manuscript/tatolatex/Figures/MSLP/mslp_scree.png")
+ggsave("Manuscript/FINAL_SUBMIT_LATEX/Figures/fig5.eps",device = "eps")
 
 #Get scores as dataframe 
 slp_scores<-as.data.frame(slp_pca$x)
@@ -123,12 +123,12 @@ save.image(file = "ERA5_MSLP_env.Rdata")
 #Alternative plotting method, not implimented 
 #spplot(loading,sp.layout=list('sp.lines', coastlines, lwd=2,first=F), scales = list(draw = TRUE))
 
-for(pc in c(1:15))
+for(pc in c(1,2,3,8,10,11))
 {
   loading<-rasterFromXYZ(cbind(lon_lat,slp_pca$rotation[,pc]))
   crs(loading) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
   
-  path = paste0("Manuscript/tatolatex/Figures/MSLP/mslp_pc",pc,".jpeg")
+  path = paste0("Manuscript/FINAL_SUBMIT_LATEX/Figures/Orig/mslp_pc",pc,".jpeg")
   
   jpeg(path,quality = 100)
   plot(loading, main = "",xlab = "",ylab="",col=colors ,box=FALSE,xlim=c(-180,180), ylim=c(-90,90), asp=2)

@@ -5,6 +5,7 @@ library(RColorBrewer)
 library(factoextra)
 library(cluster)
 library(doParallel)
+library(raster)
 
 
 ####Define Functions####
@@ -125,7 +126,7 @@ grid_spat_load<-function(lat_lon,rast, pca, pc_num)
   r<-rasterFromXYZ(xyz,res=res(rast),crs=crs(rast))
   
   #Write out as tiff
-  writeRaster(r, filename=paste("Manuscript/tatolatex/Figures/SDoff/","PC",pc_num,"_loading.tif", sep=""), format="GTiff", overwrite=TRUE)
+  #writeRaster(r, filename=paste("Manuscript/tatolatex/Figures/SDoff/","PC",pc_num,"_loading.tif", sep=""), format="GTiff", overwrite=TRUE)
   
   #return raster object
   return(r)
@@ -155,8 +156,8 @@ plot_sdoff_load<-function(mod_load_imgs,num_load)
       theme(legend.position  = c(.85,.7))
     
     #Save loading raster as JPEG
-    out_file<-paste("Manuscript/tatolatex/Figures/SDoff/sdoff_pc",pc,".jpeg",sep="")
-    ggsave(filename = out_file, device = 'jpeg')
+    out_file<-paste("Manuscript/FINAL_SUBMIT_LATEX/Figures/Orig/sdoff_pc",pc,".jpeg",sep="")
+    ggsave(filename = out_file, device = 'jpeg',dpi=600)
   }
 }
 
@@ -188,7 +189,7 @@ plot_clust_mean<-function(years,snow_dir_path,ts_mean,clust_num)
   
   #Generate output and label strings 
   labl_strg<-paste("Cluster ",clust_num,sep="")
-  out_file<-paste("Manuscript/tatolatex/Figures/SDoff/cluster",clust_num,"_mean.jpeg",sep="")
+  out_file<-paste("Manuscript/FINAL_SUBMIT_LATEX/Figures/Orig/cluster",clust_num,"_mean.jpeg",sep="")
   
   #Plot cluster diffrence anomoly using RStoolbox
   RStoolbox::ggR(clust_dif, geom_raster = T, forceCat = T) + 
@@ -196,12 +197,12 @@ plot_clust_mean<-function(years,snow_dir_path,ts_mean,clust_num)
     geom_sf(data=ecoprov, fill = NA, col = 'black') +
     coord_sf(xlim = c(1917109/9,1917109)) +
     scale_fill_manual(values = cols, na.value="white",labels = c("<-30","-30--20","-20--10","-10--6","-6--2","-2-2","2-6","6-10","10-20","20-30",">30")) +
-    labs(x="",y="",fill=bquote(paste(.(labl_strg)," - Avg. ",SD[OFF]," (Days)")))+
+    labs(x="",y="",fill=bquote(paste("Avg. ",SD[OFF]," (Days)")))+
     theme_void()+
     theme(legend.position  = c(.85,.7),legend.text=element_text(size=10))
   
   #Save as JPEG
-  ggsave(filename = out_file, device = 'jpeg')
+  ggsave(filename = out_file, device = 'jpeg',dpi=600)
   
   
 }
@@ -258,9 +259,9 @@ cl<-makeCluster(4)
 registerDoParallel(cl)
 
 #Run in Parrallel (!memory-hog!), get a list of first 4 spatialy reconstructed principle components. 
-mod_load_imgs<-foreach(pc=1:18, .packages = 'raster') %dopar% + grid_spat_load(rast_data[[2]],rast_data[[3]],dur_pca,pc)
+mod_load_imgs<-foreach(pc=1:19, .packages = 'raster') %dopar% + grid_spat_load(rast_data[[2]],rast_data[[3]],dur_pca,pc)
 
-plot_sdoff_load(mod_load_imgs,18)
+plot_sdoff_load(mod_load_imgs,19)
 
 stopCluster(cl)
 
@@ -275,17 +276,17 @@ clust_pal<-RColorBrewer::brewer.pal(4,'Set2')
 k_clust<-kmeans(x=mod_scores, centers=2,nstart = 1000)
 sil<-silhouette(k_clust$cluster,dist(mod_scores))
 fviz_silhouette(sil,label = F, print.summary = T,palette = clust_pal,title="k = 2", legend.title="Cluster",font.main=c(16),font.y=c(16),font.legend=c(16),font.tickslab=c(14),ggtheme=theme_classic())+ylim(c(-.01,.3))
-ggsave("Manuscript/tatolatex/Figures/SDoff/sil_k_2.png")
+ggsave("Manuscript/FINAL_SUBMIT_LATEX/Figures/fig3a.eps", device="eps")
 
 k_clust<-kmeans(x=mod_scores, centers=3,nstart = 1000)
 sil<-silhouette(k_clust$cluster,dist(mod_scores))
 fviz_silhouette(sil,label = F, print.summary = T,palette = clust_pal,title="k = 3", legend.title="Cluster",font.main=c(16),font.y=c(16),font.legend=c(16),font.tickslab=c(14),ggtheme=theme_classic())+ylim(c(-.01,.3))
-ggsave("Manuscript/tatolatex/Figures/SDoff/sil_k_3.png")
+ggsave("Manuscript/FINAL_SUBMIT_LATEX/Figures/fig3b.eps", device="eps")
 
 k_clust<-kmeans(x=mod_scores, centers=4,nstart = 1000)
 sil<-silhouette(k_clust$cluster,dist(mod_scores))
 fviz_silhouette(sil,label = F, print.summary = T,palette = clust_pal,title="k = 4", legend.title="Cluster",font.main=c(16),font.y=c(16),font.legend=c(16),font.tickslab=c(14),ggtheme=theme_classic())+ylim(c(-.01,.3))
-ggsave("Manuscript/tatolatex/Figures/SDoff/sil_k_4.png")
+ggsave("Manuscript/FINAL_SUBMIT_LATEX/Figures/fig3c.eps", device="eps")
 
 k_clust<-kmeans(x=mod_scores, centers=5,nstart = 1000)
 sil<-silhouette(k_clust$cluster,dist(mod_scores))
@@ -333,7 +334,7 @@ RStoolbox::ggR(ts_mean, geom_raster = T) +
   theme_void()+
   theme(legend.position  = c(.85,.7),legend.text=element_text(size=10))
 
-ggsave(filename = "Manuscript/tatolatex/Figures/SDoff/ts_mean.jpeg", device = 'jpeg')
+ggsave(filename = "Manuscript/FINAL_SUBMIT_LATEX/Figures/ts_mean.jpeg", device = 'jpeg',dpi=600)
 
 clu_1_r<-get_r_stack(clu_1,snow_dir_path)
 clu_2_r<-get_r_stack(clu_2,snow_dir_path)
@@ -367,12 +368,12 @@ RStoolbox::ggR(clu_dif, geom_raster = T, forceCat = T) +
   geom_sf(data=ecoprov, fill = NA, col = 'black') +
   coord_sf(xlim = c(1917109/9,1917109)) +
   scale_fill_manual(values = cols, na.value="white",labels = c("<-30","-30--20","-20--10","-10--6","-6--2","-2-2","2-6","6-10","10-20","20-30",">30")) +
-  labs(x="",y="",fill="Clust. 1 - Clust. 2")+
+  labs(x="",y="",fill="Clust. 1 - Clust. 2 (Days)")+
   theme_void()+
   theme(legend.position  = c(.85,.7),legend.text=element_text(size=10))
 
-ggsave(filename = "Manuscript/tatolatex/Figures/SDoff/clust_diff.jpeg", device = 'jpeg')
-writeRaster(clu_dif,"Manuscript/tatolatex/Figures/SDoff/clust_diff.tif")
+ggsave(filename = "Manuscript/FINAL_SUBMIT_LATEX/Figures/clust_diff.jpeg", device = 'jpeg',dpi=600)
+#writeRaster(clu_dif,"Manuscript/tatolatex/Figures/SDoff/clust_diff.tif")
 
 
 
