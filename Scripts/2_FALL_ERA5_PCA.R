@@ -6,6 +6,7 @@ library(parallel)
 library(RColorBrewer)
 library(maptools)
 library(raster)
+library(data.table)
 
 colors <- brewer.pal(11, "Spectral")
 
@@ -40,45 +41,47 @@ yr_to_grib_idx<-function(yr)
 agg_fall_era5<-function(yr)
 {
   #Read the ERA5 GRIB file at bands corresponding to the year and months 
-  yr_rast<-read_stars(era_path,RasterIO = list(bands = yr_to_grib_idx(yr)))
+  yr_rast<-readGDAL(era_path,band = yr_to_grib_idx(yr))
   
-  #Reduce 3-months to seasonal (fall) mean 
-  yr_rast<-st_apply(yr_rast, 1:2, mean, CLUSTER = cl) 
+  #Compute mean
+  yr_rast<-yr_rast@data
   
-  #Convert to data frame
-  yr_rast<-as.data.frame(yr_rast)
+  yr_rast$mean<- (yr_rast[,1]+yr_rast[,2]+yr_rast[,3])/3
+  
+  #Get as vector 
+  yr_rast<-yr_rast$mean
   
   #Return as vector 
-  return(yr_rast$mean)
+  return(yr_rast)
 }
 
 ####Convert ERA5 monthly data into average fall MSLP in table form 
 
-#Initlize clusters
-cl<-makeCluster(20)
 
 #Initilize a fall_slp stack with first year (1979) 
-fall_slp<-read_stars(era_path,RasterIO = list(bands = yr_to_grib_idx(start_yr)))
+fall_slp<-readGDAL(era_path,band = yr_to_grib_idx(start_yr))
 
-#Compute mean
-fall_slp<-st_apply(fall_slp, 1:2, mean, CLUSTER = cl) 
-fall_slp<-as.data.frame(fall_slp)
 
 #Get lat lon, convert to -180-180, -90-90
-lon_lat<-fall_slp[,c(1,2)]
+lon_lat<-as.data.frame(coordinates(fall_slp))
 lon_lat$x[lon_lat$x>=180]<-lon_lat$x[lon_lat$x>=180]-360.0
+
+#Compute mean
+fall_slp<-fall_slp@data
+
+fall_slp$mean<- (fall_slp[,1]+fall_slp[,2]+fall_slp[,3])/3
 
 #Get as vector 
 fall_slp<-fall_slp$mean
 
 #Add the remaining years to fall_slp table 
-for(yr in c(start_yr+1:end_yr))
+for(yr in c((start_yr+1):end_yr))
 {
+  print(yr)
   fall_slp<-rbind(fall_slp,agg_fall_era5(yr))
 }
 
-#Shutdown clusters 
-stopCluster(cl)
+
 
 #Convert fall_slp to data frame and perform PCA
 fall_slp<-as.data.frame(fall_slp)
@@ -87,6 +90,16 @@ fall_slp<-as.data.frame(fall_slp)
 
 #Scale and center data, compute PCA,
 slp_pca<-prcomp(fall_slp,scale.=T, center = T)
+
+scale_cent<-as.data.frame(rbind(slp_pca$scale,slp_pca$center))
+
+scale_cent<-data.table(scale_cent)
+
+fwrite(scale_cent,'RawData/Prediction/scale_center.csv')
+
+loadings<-data.table(slp_pca$rotation)
+
+fwrite(loadings,'RawData/Prediction/slp_loadings.csv')
 
 summary(slp_pca)
 
