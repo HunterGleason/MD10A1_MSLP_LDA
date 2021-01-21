@@ -44,7 +44,7 @@ lda_matx <- sdoff_clust %>%
 
 #As a data frame 
 lda_matx<-as.data.frame(lda_matx)
-
+write.csv(lda_matx,'RawData/Prediction/LDA_Matrix.csv')
 
 ####Define Functions####
 
