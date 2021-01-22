@@ -20,24 +20,49 @@ If you have bcgovr installed and you use RStudio, click the 'Insert BCDevex Badg
 
 ### Usage
 
-Describe data being used (links), and how to run. Eg:
+This repository contains the scripts used in the analysis *Classification of Clustered Snow Off Dates Over British Columbia, Canada, from Mean Sea Level Pressure* (Gleason et al., 2020). In addition, a Docker image is provided for enabling annual predictions of the BC Snow Off Clusters. 
 
-There are four core scripts that are required for the analysis, they need to be run in order:
+There are 7 core scripts that are required for the analysis, they need to be run in order:
 
-- 01_clean.R
-- 02_analysis.R
-- 03_visualize.R
-- 04_output.R
+- DL_Fall_ERA5_MSLP.py
+- 1_SDOFF_CLUSTER.R
+- 2_FALL_ERA5_PCA.R
+- 3_SDOFF_MSLP_LDA.R
+- 4_TeleCorr.R
+- DL_Fall_ERA5_MSLP_annual.py
+- 5_MAKE_LDA_PREDICTION.R
 
-#### Example
+Note these scripts are provided for transparency, the data required to run them is not hosted on this repository because of storage constraints, however, we would be happy to provide these data by request. Please see section about running Docker image for making annual predictions.  
 
-This is a basic example which shows you how to solve a common problem:
 
-```{r example}
-## basic example code
+
+#### Docker Example
+
+Annual predictions of the gridded Snow Off Clusters can be generated using the Docker image *huntgdok/bc_lda_sdoff*. This Docker image simplifies running the  *DL_Fall_ERA5_MSLP_annual.py* and *5_MAKE_LDA_PREDICTION.R* scripts and only requires the user provide their CDC credentials. Assuming Docker is installed locally, the image can be obtained using the following Docker command:
+
+```{bash, eval = FALSE}
+docker pull huntgdok/bc_lda_sdoff:latest
 ```
 
+Once the image is in place, the follwing steps must be completed before running the Docker image. First, the users Climate Data Store Application Program Interface credentials (.cdsapirc) file must be copied into a directory named *userdata* on the users local machine, e.g.:
+
+```{bash, eval = FALSE}
+cd C:/Users/user/Desktop
+mkdir userdata
+cd userdata
+cp C:/Users/user/.cdsapirc .
+```
+
+The Docker image can then be run by attaching the *userdata* directory with the volume flag *-v*. In addition, the user needs to provide the year (corresponding to fall) to make a prediction by specifying YEAR in the global environment *-e*, e.g., to make a prediction for hydrologic year 2020:
+
+```{bash, eval = FALSE}
+docker run -e YEAR=2020 -v C:/Users/user/Desktop/userdata:/home/userdata huntgdok/bc_lda_sdoff:latest
+```
+
+The user may see various messages and warnings, of these some can be ignored including *getProjectionRef...* and *...Ran out of file reading SECT0*. On a typical laptop computer the prediction should take 5-10 minutes to run so please be patient. Upon completion, the ERA5 mean sea level pressure GRIB file and the prediction output CSV will should appear in the *userdata* directory as *fall_era5_download.grib* and *BC_SDoff_Prediction.csv* respectively. 
+
 ### Project Status
+Maturing
 
 ### Getting Help or Reporting an Issue
 
