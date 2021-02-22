@@ -1,4 +1,7 @@
-[![img](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)---
+---
+title: "Predicting BC Snow Off Clusters"
+author: Hunter Gleason
+date: Jan 22, 2021
 output:
   md_document:
     variant: markdown_github
@@ -62,7 +65,7 @@ docker run -e YEAR=2020 -v C:/Users/user/Desktop/userdata:/home/userdata huntgdo
 The user may see various messages and warnings, of these some can be ignored including *getProjectionRef...* and *...Ran out of file reading SECT0*. On a typical laptop computer the prediction should take 5-10 minutes to run so please be patient. Upon completion, the ERA5 mean sea level pressure GRIB file and the prediction output CSV will should appear in the *userdata* directory as *fall_era5_download.grib* and *BC_SDoff_Prediction.csv* respectively. 
 
 ### Project Status
-Maturing
+[![img](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
 
 ### Getting Help or Reporting an Issue
 
