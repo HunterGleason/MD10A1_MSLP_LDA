@@ -28,4 +28,4 @@ c.retrieve(
         'year': str(sys.argv[1]),
         'month': ['09', '10', '11'],
         'time': '00:00',
-    },str(sys.argv[2]) + '/fall_era5_download.grib')
+    },str(sys.argv[1])+'fall_era5_download.grib')

@@ -1,46 +1,40 @@
-# Copyright 2021 Province of British Columbia
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-# http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and limitations under the License.
-
-
-
-
 ####Load Library####
-library(rgdal)
-library(data.table)
-library(MASS)
+pkgs <- c("terra","data.table","MASS")
+
+
+CheckInstallPackages <- function(pkgs) {
+  x <- lapply(pkgs, function(pkg) {
+    if (!require(pkg, character.only = TRUE)) {
+      install.packages(pkg, repos = "http://cran.rstudio.com")
+      library(pkg, character.only = TRUE)
+    }
+  })
+}
+
 
 ####Compute mean fall sea level pressure from annual output of DL_Fall_ERA5_MSLP_annual.py####
 #Read in annual ERA5 monthly mean MSLP GRIB file
-FALL_ERA5_MLSP <- readline(prompt="Enter path to ERA5 Fall Mean Sea Level Pressure GRIB file (output from DL_Fall_ERA5_MSLP_annual.py): ")
+WORK_DIR <- readline(prompt="Enter path to cloned MD10A1_MSLP_LDA working directory, e.g.,'/home/user/Downloads/MD10A1_MSLP_LDA/', no quotes:")
+setwd(WORK_DIR)
+
+year<-readline(prompt="Enter hydrologic (Sep-Sep) year to run, e.g., 2020, make sure 'DL_Fall_ERA5_MSLP_annual.py' has been run and the output GRIB for the given year is in the Data directory:")
 
 #Read GRIB using GDAL
-fall_slp <- readGDAL(FALL_ERA5_MLSP,band = c(1,2,3))
-
-#Get MSLP data
-fall_slp <- fall_slp@data
+fall_slp <- rast(paste0("Data/",year,"fall_era5_download.grib"),lyrs=c(1,2,3))
 
 #Compute fall (Sep-Oct-Nov) mean sea level pressure 
-fall_slp$mean <- (fall_slp[,1]+fall_slp[,2]+fall_slp[,3])/3
+fall_slp_mean <- as.data.frame(mean(fall_slp))
 
 #Select average column 
-fall_slp <- fall_slp$mean
+fall_slp <- fall_slp_mean$mean
 
 ####Scale and center current years fall MSLP data####
 
 #Scale the data using scaling from analysis, saved as local CSV
-scale_center <- fread('RawData/Prediction/scale_center.csv')
+scale_center <- fread("Data/scale_center.csv")
 
 #Load principle component eigenvectors from analysis, saved as local CSV 
-loadings<-fread('RawData/Prediction/slp_loadings.csv')
+loadings<-fread("Data/slp_loadings.csv")
 
 #Center the current years fall MSLP data
 centered<-fall_slp-scale_center[2,]
@@ -72,7 +66,7 @@ OBS<-as.data.frame(cbind(PC1_Score,PC2_Score,PC3_Score,PC8_Score,PC10_Score,PC11
 colnames(OBS)<-c('PC1','PC2','PC3','PC8','PC10','PC11')
 
 #Load the LDA matrix from analysis 
-LDA_Matrix<-read.csv('RawData/Prediction/LDA_Matrix.csv')
+LDA_Matrix<-read.csv("Data/LDA_Matrix.csv")
 
 #Fit the LDA model from analysis 
 lda_mod<-lda(formula = as.formula('k_clust~PC1+PC2+PC3+PC8+PC10+PC11'),data=LDA_Matrix)
@@ -85,4 +79,3 @@ message(paste("LD1 Score: "),yhat$x,sep='')
 message(paste("LD1 Cluster 1 Posterior: "),yhat$posterior[1],sep='')
 message(paste("LD1 Cluster 2 Posterior: "),yhat$posterior[2],sep='')
 message(paste('Predicted Snow Off Cluster: Cluster ',yhat$class,' (See Gleason et al. 2020 Figure 4 for regional cluster SDoff differences)',sep=''))
-
