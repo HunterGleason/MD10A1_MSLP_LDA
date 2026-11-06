@@ -79,3 +79,4 @@ message(paste("LD1 Score: "),yhat$x,sep='')
 message(paste("LD1 Cluster 1 Posterior: "),yhat$posterior[1],sep='')
 message(paste("LD1 Cluster 2 Posterior: "),yhat$posterior[2],sep='')
 message(paste('Predicted Snow Off Cluster: Cluster ',yhat$class,' (See Gleason et al. 2020 Figure 4 for regional cluster SDoff differences)',sep=''))
+

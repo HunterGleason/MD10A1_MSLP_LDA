@@ -2,8 +2,7 @@
 See https://github.com/BCDevExchange/Our-Project-Docs/blob/master/discussion/projectstates.md
 If you have bcgovr installed and you use RStudio, click the 'Insert BCDevex Badge' Addin. -->
 
-MD10A1\_MSLP\_LDA
-=================
+# MD10A1_MSLP_LDA
 
 ### Usage
 
@@ -16,13 +15,13 @@ the BC Snow Off Clusters.
 There are 7 core scripts that are required for the analysis, they need
 to be run in order:
 
--   DL\_Fall\_ERA5\_MSLP.py
--   1\_SDOFF\_CLUSTER.R
--   2\_FALL\_ERA5\_PCA.R
--   3\_SDOFF\_MSLP\_LDA.R
--   4\_TeleCorr.R
--   DL\_Fall\_ERA5\_MSLP\_annual.py
--   5\_MAKE\_LDA\_PREDICTION.R
+-   DL_Fall_ERA5_MSLP.py
+-   1_SDOFF_CLUSTER.R
+-   2_FALL_ERA5_PCA.R
+-   3_SDOFF_MSLP_LDA.R
+-   4_TeleCorr.R
+-   DL_Fall_ERA5_MSLP_annual.py
+-   5_MAKE_LDA_PREDICTION.R
 
 Note these scripts are provided for transparency, the data required to
 run them is not hosted on this repository because of storage
@@ -30,24 +29,11 @@ constraints, however, we would be happy to provide these data by
 request. Please see section about running Docker image for making annual
 predictions.
 
-#### Docker Example
+#### Making a Annual Prediction, A Example
 
-Annual predictions of the gridded Snow Off Clusters can be generated
-using the Docker image *huntgdok/bc\_lda\_sdoff*. This Docker image
-simplifies running the *DL\_Fall\_ERA5\_MSLP\_annual.py* and
-*5\_MAKE\_LDA\_PREDICTION.R* scripts and only requires the user provide
-their CDC credentials. Assuming Docker is installed locally, the image
-can be obtained using the following Docker command:
-
-``` bash
-docker pull huntgdok/bc_lda_sdoff:latest
-```
-
-Once the image is in place, the follwing steps must be completed before
-running the Docker image. First, the users Climate Data Store
-Application Program Interface credentials (.cdsapirc) file must be
-copied into a directory named *userdata* on the users local machine,
-e.g.:
+First, the users Climate Data Store Application Program Interface
+credentials (.cdsapirc) file must be copied into a directory named
+*userdata* on the users local machine, e.g., for Windows users:
 
 ``` bash
 cd C:/Users/user/Desktop
@@ -56,23 +42,44 @@ cd userdata
 cp C:/Users/user/.cdsapirc .
 ```
 
-The Docker image can then be run by attaching the *userdata* directory
-with the volume flag *-v*. In addition, the user needs to provide the
-year (corresponding to fall) to make a prediction by specifying YEAR in
-the global environment *-e*, e.g., to make a prediction for hydrologic
-year 2020:
+See <https://cds.climate.copernicus.eu/how-to-api> for more up to date
+information.
+
+With credentials in place, the DL_Fall_ERA5_MSLP_annual.py script should
+be run from the *Data* directory to download annual ERA5 mean sea level
+pressure GRIB files, adding the hydrologic year to download as an
+argument, e.g., to run for 2022:
 
 ``` bash
-docker run -e YEAR=2020 -v C:/Users/user/Desktop/userdata:/home/userdata huntgdok/bc_lda_sdoff:latest
+python DL_Fall_ERA5_MSLP_annual.py 2022
 ```
 
-The user may see various messages and warnings, of these some can be
-ignored including *getProjectionRef…* and *…Ran out of file reading
-SECT0*. On a typical laptop computer the prediction should take 5-10
-minutes to run so please be patient. Upon completion, the ERA5 mean sea
-level pressure GRIB file and the prediction output CSV will should
-appear in the *userdata* directory as *fall\_era5\_download.grib* and
-*BC\_SDoff\_Prediction.csv* respectively.
+Upon completion, the fall ERA5 mean sea level pressure GRIB file and
+will should appear in the *Data* directory as
+*YEAR_fall_era5_download.grib*, where *YEAR* indicates the hydrologic
+year.
+
+To compute the atmospheric principle components, and make a prediction
+of the snow duration cluster, run the *5_MAKE_LDA_PREDICTION.R* script.
+Provide the path to the cloned MD10A1_MSLP_LDA directory and the
+hydrologic year to predict, the ERA5 sea level pressure for the given
+year must be in the *Data* directory and names as mentioned above or the
+script will fail. The computed MSLP principle components, LD1 score,
+posteriors, and predicted snow cluster are printed to the console.
+
+####Past predictions####
+
+| Year | PC1_score | PC2_score | PC3_score | PC8_score | PC10_score | PC11_score | LD1_score | LD1_C1_post | LD2_C2_post | clust |
+|---:|------:|------:|------:|------:|-------:|-------:|------:|-------:|-------:|----:|
+| 2019 | -130.06 | 343.25 | 133.02 | 30.07 | 157.86 | -80.60 | 0.569 | 0.215 | 0.785 | 2 |
+| 2020 | 330.94 | -332.18 | 506.81 | -96.87 | 87.23 | 14.53 | -1.618 | 0.993 | 0.007 | 1 |
+| 2021 | 733.39 | -389.21 | 46.30 | 170.27 | -89.08 | -9.28 | -0.472 | 0.840 | 0.160 | 1 |
+| 2022 | 551.13 | -734.87 | 277.69 | 150.98 | -44.06 | -23.44 | 0.066 | 0.532 | 0.468 | 1 |
+| 2023 | -70.72 | -44.48 | 466.48 | 67.78 | -122.88 | -152.90 | 1.303 | 0.033 | 0.967 | 2 |
+| 2024 | 265.81 | -110.14 | 153.43 | 117.64 | -15.92 | 99.30 | -0.225 | 0.723 | 0.277 | 1 |
+| 2025 | 73.26 | 245.97 | 69.96 | 221.01 | -86.78 | -89.81 | 1.439 | 0.023 | 0.977 | 2 |
+
+![](README-unnamed-chunk-4-1.png)![](README-unnamed-chunk-4-2.png)
 
 ### Project Status
 

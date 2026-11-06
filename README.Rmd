@@ -13,6 +13,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "README-"
 )
+prediction_results <- read.csv("~/Dropbox/Work/MOF/Arch/MD10A1_MSLP_LDA/Data/prediction_results.txt")
 ```
 
 <!-- Add a project state badge
@@ -53,11 +54,21 @@ See https://cds.climate.copernicus.eu/how-to-api for more up to date information
 
 With credentials in place, the DL_Fall_ERA5_MSLP_annual.py script should be run from the *Data* directory to download annual ERA5 mean sea level pressure GRIB files, adding the hydrologic year to download as an argument, e.g., to run for 2022:
 
-```{python,eval=FALSE}
+```{bash,eval=FALSE}
 python DL_Fall_ERA5_MSLP_annual.py 2022
 ```
 
-Upon completion, the ERA5 mean sea level pressure GRIB file and the prediction output CSV will should appear in the *Data* directory as *YEAR_fall_era5_download.grib* and *BC_SDoff_Prediction.csv* respectively. 
+Upon completion, the fall ERA5 mean sea level pressure GRIB file and will should appear in the *Data* directory as *YEAR_fall_era5_download.grib*, where *YEAR* indicates the hydrologic year.
+
+To compute the atmospheric principle components, and make a prediction of the snow duration cluster, run the *5_MAKE_LDA_PREDICTION.R* script. Provide the path to the cloned MD10A1_MSLP_LDA directory and the hydrologic year to predict, the ERA5 sea level pressure for the given year must be in the *Data* directory and names as mentioned above or the script will fail. The computed MSLP principle components, LD1 score, posteriors, and predicted snow cluster are printed to the console. 
+
+####Past predictions####
+```{r,echo=F}
+knitr::kable(prediction_results)
+plot(prediction_results$Year,prediction_results$LD1_score,type='l',xlab="Hydro. Year",ylab="LD1 Score")
+plot(prediction_results$Year,prediction_results$clust,xlab="Hydro. Year",ylab="Snow Cluster",yaxt='n')
+axis(side=2,at=c(1,2))
+```
 
 ### Project Status
 [![img](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)](https://github.com/bcgov/repomountie/blob/master/doc/lifecycle-badges.md)
