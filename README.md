@@ -26,8 +26,7 @@ to be run in order:
 Note these scripts are provided for transparency, the data required to
 run them is not hosted on this repository because of storage
 constraints, however, we would be happy to provide these data by
-request. Please see section about running Docker image for making annual
-predictions.
+request. Please see section below about how to make annual predictions.
 
 #### Making a Annual Prediction, A Example
 
@@ -55,17 +54,19 @@ python DL_Fall_ERA5_MSLP_annual.py 2022
 ```
 
 Upon completion, the fall ERA5 mean sea level pressure GRIB file and
-will should appear in the *Data* directory as
-*YEAR_fall_era5_download.grib*, where *YEAR* indicates the hydrologic
-year.
+should appear in the *Data* directory as *YEAR_fall_era5_download.grib*,
+where *YEAR* indicates the hydrologic year. This can take some time
+depending on how busy the Copernicus server is.
 
 To compute the atmospheric principle components, and make a prediction
 of the snow duration cluster, run the *5_MAKE_LDA_PREDICTION.R* script.
-Provide the path to the cloned MD10A1_MSLP_LDA directory and the
-hydrologic year to predict, the ERA5 sea level pressure for the given
-year must be in the *Data* directory and names as mentioned above or the
-script will fail. The computed MSLP principle components, LD1 score,
-posteriors, and predicted snow cluster are printed to the console.
+The script will promt you to provide the local path to the cloned
+MD10A1_MSLP_LDA directory on your machine and the hydrologic year you
+wish to make a prediction for. The ERA5 sea level pressure GRIB for the
+given year must be in the *Data* directory and named as specified above
+or the script will fail. The computed MSLP principle components, LD1
+score, posteriors, and predicted snow cluster are printed to the
+console.
 
 ####Past predictions####
 
