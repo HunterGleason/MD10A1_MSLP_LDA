@@ -62,11 +62,12 @@ Upon completion, the fall ERA5 mean sea level pressure GRIB file and should appe
 
 To compute the atmospheric principle components, and make a prediction of the snow duration cluster, run the *5_MAKE_LDA_PREDICTION.R* script. The script will promt you to provide the local path to the cloned MD10A1_MSLP_LDA directory on your machine and the hydrologic year you wish to make a prediction for. The ERA5 sea level pressure GRIB for the given year must be in the *Data* directory and named as specified above or the script will fail. The computed MSLP principle components, LD1 score, posteriors, and predicted snow cluster are printed to the console. 
 
-####Past predictions####
+####Past Predictions
 ```{r,echo=F}
 knitr::kable(prediction_results)
 plot(prediction_results$Year,prediction_results$LD1_score,type='l',xlab="Hydro. Year",ylab="LD1 Score")
-plot(prediction_results$Year,prediction_results$clust,xlab="Hydro. Year",ylab="Snow Cluster",yaxt='n')
+abline(h=0,col="pink")
+plot(prediction_results$Year,prediction_results$clust,xlab="Hydro. Year",ylab="Snow Cluster",yaxt='n',col='brown')
 axis(side=2,at=c(1,2))
 ```
 

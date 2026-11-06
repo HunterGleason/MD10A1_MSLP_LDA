@@ -68,7 +68,7 @@ or the script will fail. The computed MSLP principle components, LD1
 score, posteriors, and predicted snow cluster are printed to the
 console.
 
-####Past predictions####
+####Past Predictions
 
 | Year | PC1_score | PC2_score | PC3_score | PC8_score | PC10_score | PC11_score | LD1_score | LD1_C1_post | LD2_C2_post | clust |
 |---:|------:|------:|------:|------:|-------:|-------:|------:|-------:|-------:|----:|
